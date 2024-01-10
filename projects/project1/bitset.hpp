@@ -3,14 +3,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
+#include <bitset>
+#include <cmath>
+
 
 class Bitset{
 public:
 
-  // TODO COMMENT
+  //Default Constructor that creates a bitset of 8 all being set to zero
   Bitset();
 
-  // TODO COMMENT
+  //Constructor that creates a bitset of size parameter "size". returns invalid if parameter is less than or equal to 0
   Bitset(intmax_t size);
 
   // TODO COMMENT
@@ -45,7 +48,8 @@ public:
 
 private:
 
-  // TODO
+  bool valid=true;
+  uint8_t* valid_bit_set;
 };
 
 #endif

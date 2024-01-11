@@ -50,6 +50,7 @@ private:
 
   bool valid=true;
   uint8_t* valid_bit_set;
+  size_t bit_set_size;
 };
 
 #endif

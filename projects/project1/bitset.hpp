@@ -3,54 +3,54 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
-#include <bitset>
-#include <cmath>
+
 
 
 class Bitset{
 public:
 
-  //Default Constructor that creates a bitset of 8 all being set to zero
+  //Default Constructor that creates a bitset of length 8, all bits being set to zero
   Bitset();
 
-  //Constructor that creates a bitset of size parameter "size". returns invalid if parameter is less than or equal to 0
+  //Constructor that creates a bitset of length parameter "size". returns invalid if parameter is less than or equal to 0
   Bitset(intmax_t size);
 
-  // TODO COMMENT
+  //String Constructor that creates a bitset off of string parameter. tests each character of the string for invalidity if != 1 or 0
   Bitset(const std::string & value);
 
-  // TODO COMMENT
+  //delete memory allocated for pointer
   ~Bitset();
 
   Bitset(const Bitset & ) = delete;
   Bitset & operator=(const Bitset &) = delete;
 
-  // TODO COMMENT
+  //Returns the size of the bitset. ex. would return 8 for default constructor bitset
   intmax_t size() const;
 
-  // TODO COMMENT
+  //returns the value of the private member variable that holds the validity of the bitset which updates throughout the methods
   bool good() const;
 
-  // TODO COMMENT
+  //Using the index parameter, the bit in that place is "set" to 1. if the index is not within range of the bitset then bitset becomes invalid
   void set(intmax_t index);
 
-  // TODO COMMENT
+  //Using the parameter index value to "reset" the bit at that index to 0. bitset marked invalid if index is not within bitset range
   void reset(intmax_t index);
 
-  // TODO COMMENT
+  //Parameter index switches the bitset at that index from the current value i.e. 0 to 1 or 1 to 0
   void toggle(intmax_t index);
 
-  // TODO COMMENT
+  //Returns true if the given bit at the index parameter is =1. returns false if =0 or if the index is not within range of the bitset
   bool test(intmax_t index);
 
-  // TODO COMMENT
+  //Returns the bitset as its string equivalent starting with MSB
   std::string asString() const;
 
 private:
 
-  bool valid=true;
-  uint8_t* valid_bit_set;
-  size_t bit_set_size;
+  bool valid;
+  bool* valid_bit_set;
+  int bit_set_size;
+ 
 };
 
 #endif

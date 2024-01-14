@@ -12,6 +12,11 @@ TEST_CASE( "Test bitset default construction", "[bitset]" ) {
     REQUIRE(b.good());
 }
 
+TEST_CASE("Test bitset construction given invalid parameter size", "[bitset]"){
+    Bitset b(0);
+    REQUIRE_FALSE(b.good());
+}
+
 TEST_CASE( "Test bitset construction with asString", "[bitset]" ) {
     Bitset b;
     REQUIRE(b.asString().compare("00000000") == 0);
@@ -22,6 +27,16 @@ TEST_CASE( "Test bitset construction size", "[bitset]" ) {
     std::string s(64, '0');
     REQUIRE(b.size() == 64);
     REQUIRE(b.good());
+}
+
+TEST_CASE("Test bitset string construction, set, toggle, and test","[bitset]"){
+    Bitset b("001100110101");
+    REQUIRE(b.size()==12);
+    b.set(0);
+    b.toggle(2);
+    REQUIRE(b.test(0));
+    REQUIRE_FALSE(b.test(2));
+
 }
 
 TEST_CASE( "Test bitset construction string", "[bitset]" ) {

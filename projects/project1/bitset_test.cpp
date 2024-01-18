@@ -13,7 +13,7 @@ TEST_CASE( "Test bitset default construction", "[bitset]" ) {
 }
 
 TEST_CASE("Test bitset construction given invalid parameter size", "[bitset]"){
-    Bitset b(0);
+    Bitset b(-1);
     REQUIRE_FALSE(b.good());
 }
 

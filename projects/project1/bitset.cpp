@@ -12,20 +12,26 @@ Bitset::Bitset() {
 Bitset::Bitset(intmax_t size){
    if(size>0){
     valid=true;
-    bit_set_size=size;
    }
    else{
     valid=false;
    }
+   if(valid){
+   bit_set_size=size;
    valid_bit_set = new bool[bit_set_size];
    for(int i=0;i<bit_set_size;i++){
     *(valid_bit_set+i)=0;
+   }
+   }
+   if(!valid){
+    valid_bit_set=nullptr;
    }
 };
 
 Bitset::Bitset(const std::string & value) {
     bit_set_size=value.length();
     valid_bit_set= new bool[bit_set_size];
+    valid=true;
     for(int i=0;i<bit_set_size;i++){
         if(value[i]!='0'&&value[i]!='1'){
             valid=false;
@@ -55,6 +61,7 @@ bool Bitset::good() const{
 void Bitset::set(intmax_t index){
     if(index>=0&&index<bit_set_size){
         *(valid_bit_set+index)=1;
+        valid=true;
     }
     else{
         valid=false;
@@ -64,6 +71,7 @@ void Bitset::set(intmax_t index){
 void Bitset::reset(intmax_t index){
     if(index>=0&&index<bit_set_size){
         *(valid_bit_set+index)=0;
+        valid=true;
     }
     else{
         valid=false;
@@ -74,9 +82,11 @@ void Bitset::toggle(intmax_t index){
     if (index >= 0 && index<bit_set_size){
         if(*(valid_bit_set+index)==0){
            *(valid_bit_set+index)=1;
+           valid=true;
         }
         else if(*(valid_bit_set+index)==1){
            *(valid_bit_set+index)=0;
+           valid=true;
         }
     } 
     else {
@@ -87,13 +97,12 @@ void Bitset::toggle(intmax_t index){
 bool Bitset::test(intmax_t index){
     if(index>=0 && index<bit_set_size){
         if(*(valid_bit_set+index)==1){
+            valid=true;
             return true;
-        }
-        else{
-            return false;
         }
     }
     else{
+        valid=false;
         return false;
     }
 };

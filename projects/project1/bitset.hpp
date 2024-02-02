@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
+#include <cmath>
 
 
 
@@ -47,9 +48,9 @@ public:
 
 private:
 
-  bool valid;
-  bool* valid_bit_set;
-  int bit_set_size;
+  uint8_t *ADTPtr;                                // pointer to first uint8_t element of array
+    intmax_t BSsize;                                // num of bits
+    bool isValid;
  
 };
 

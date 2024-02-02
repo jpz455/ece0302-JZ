@@ -45,7 +45,10 @@ public:
 
 private:
 
-  // TODO
+  std::size_t size;
+  
+  T* ptr;
+
 };
 
 #include "dynamic_bag.tpp"

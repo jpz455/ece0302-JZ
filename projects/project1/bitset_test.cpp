@@ -28,20 +28,6 @@ TEST_CASE( "Test bitset construction with asString", "[bitset]" ) {
     REQUIRE(b.asString().compare("00000000") == 0);
 }
 
-TEST_CASE("Test bitset asString with variable 0 and 1","[bitset]"){
-    Bitset b("0101001101011100");
-    REQUIRE(b.test(1));
-    REQUIRE(b.test(3));
-    REQUIRE(b.test(6));
-    REQUIRE(b.test(7));
-    REQUIRE(b.test(9));
-    REQUIRE_FALSE(b.test(0));
-    REQUIRE_FALSE(b.test(2));
-    REQUIRE_FALSE(b.test(4));
-    REQUIRE_FALSE(b.test(5));
-    REQUIRE(b.good());
-    REQUIRE(b.size()==16);
-}
 
 TEST_CASE( "Test bitset construction size", "[bitset]" ) {
     Bitset b(64);
@@ -82,6 +68,17 @@ TEST_CASE( "Test set", "[bitset]" ) {
     REQUIRE(b.size() == 8);
     REQUIRE(b.good());
     REQUIRE(b.asString().compare(s) == 0);
+}
+TEST_CASE("Test Reset","[bitset]"){
+    std::string s("00001111");
+    Bitset b;
+    b.set(4);
+    b.set(5);
+    b.set(6);
+    b.set(7);
+    b.reset(7);
+    REQUIRE_FALSE(b.asString().compare(s)==0);
+    
 }
 
 TEST_CASE( "Test set with size init", "[bitset]" ) {

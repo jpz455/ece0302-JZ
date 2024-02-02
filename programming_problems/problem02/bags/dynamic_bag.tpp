@@ -3,7 +3,7 @@
 template<typename T>
 DynamicBag<T>::DynamicBag() {
   size=0;
-  ptr= new T[size];
+  ptr=nullptr;
 }
 
 template<typename T>
@@ -33,23 +33,30 @@ DynamicBag<T>& DynamicBag<T>::operator=(DynamicBag<T> x)
 
 template<typename T>
 void DynamicBag<T>::swap(DynamicBag<T>& x){
+  
   std::swap(ptr,x.ptr);
   std::swap(size,x.size);
+
 }
 
 template<typename T>
 bool DynamicBag<T>::add(const T& item)
 {
-T* temp = (T*)realloc(ptr, (++size) * sizeof(T));
-    
-    if (temp) {
-        ptr = temp;
-        ptr[size - 1] = item; 
-        return true;
-    } else {
-        return false;
+    T *temp = ptr; 
+    ptr = new T[size + 1]; 
+
+    for (size_t i = 0; i < size; ++i) { 
+        ptr[i] = temp[i];
     }
+    ptr[size] = item; 
+    size++; 
+
+    delete[] temp; 
+
+    return true; 
 }
+
+
 
 
 template<typename T>
@@ -57,11 +64,11 @@ bool DynamicBag<T>::remove(const T& item)
 {
   for(size_t i=size-1;i>=0;i--){
     if(ptr[i]==item){
-      T* newBag= new T[size-1];
-      std::copy(ptr,ptr+i,newBag);
-      std::copy(ptr+i+1,ptr+size--,newBag+i);
-      delete ptr;
-      ptr=newBag;
+      T* tempBag= new T[size-1];
+      std::copy(ptr,ptr+i,tempBag);
+      std::copy(ptr+i+1,ptr+size--,tempBag+i);
+      delete [] ptr;
+      ptr=tempBag;
       return true;
     }
   }
@@ -80,9 +87,7 @@ bool DynamicBag<T>::isEmpty() const
 }
 
 template<typename T>
-std::size_t DynamicBag<T>::getCurrentSize() const
-{
-  
+std::size_t DynamicBag<T>::getCurrentSize() const{
   return size;
 }
 

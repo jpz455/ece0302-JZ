@@ -42,25 +42,32 @@ TEST_CASE("Swap test", "[DynamicBag]") {
     REQUIRE(bag2.contains(2) == 1);
 }
 
-TEST_CASE("Add method","[DynamicBag]"){
+TEST_CASE("Add test","[DynamicBag]"){
   DynamicBag<int> b;
+
   REQUIRE(b.getCurrentSize()==0);
+
   for(int i=0;i<10;i++){
     b.add(i);
   }
+
   for(int i=0;i<10;i++){
     REQUIRE(b.contains(i)==1);
   }
+
   REQUIRE(b.getCurrentSize()==10);
 }
 
-TEST_CASE("Remove method","DynamicBag"){
+TEST_CASE("Remove test","[DynamicBag]"){
   DynamicBag<int> b;
   for(int i=0;i<11;i++){
     b.add(i);
+  
   }
   REQUIRE(b.getCurrentSize()==11);
+  
   b.remove(0);
+  
   REQUIRE(b.getCurrentSize()==10);
   REQUIRE(b.contains(0)==0);
 }
@@ -89,12 +96,14 @@ TEST_CASE("Copy Assignment testing","[DynamicBag]"){
   for(int i=0;i<100;i++){
     bag1.add(8.4*1);
   }
+  
   DynamicBag<double>bag2;
   bag2=bag1;
+  
   REQUIRE(bag2.getCurrentSize()==bag1.getCurrentSize());
+  
   for(int i=0;i<100;i++){
     REQUIRE(bag2.contains(i)==bag1.contains(i));
     REQUIRE(bag2.getFrequencyOf(i)==bag1.getFrequencyOf(i));
   }
-
 }

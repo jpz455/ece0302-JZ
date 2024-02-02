@@ -46,7 +46,6 @@ public:
 private:
 
   std::size_t size;
-  
   T* ptr;
 
 };

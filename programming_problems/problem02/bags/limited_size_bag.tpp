@@ -1,5 +1,6 @@
 #include "limited_size_bag.hpp"
 
+//default constructor
 template<typename T>
 LimitedSizeBag<T>::LimitedSizeBag() {
   bagSize=0;
@@ -9,8 +10,8 @@ LimitedSizeBag<T>::LimitedSizeBag() {
 template<typename T>
 bool LimitedSizeBag<T>::add(const T& item)
 {
-  if(bagSize<maxsize){
-   fixedBag[bagSize]=item;
+  if(bagSize<maxsize){  //will only add if the bag has enough room
+   fixedBag[bagSize]=item; //appends item reference to bag
    bagSize++;
    return true;
   }
@@ -21,11 +22,11 @@ bool LimitedSizeBag<T>::add(const T& item)
 template<typename T>
 bool LimitedSizeBag<T>::remove(const T& item)
 {
-  if(bagSize!=0){
+  if(bagSize!=0){//will only remove an item if the bag is not empty
     for(int i=0;i<bagSize;i++){
       if(fixedBag[i]==item){
         for(int j=i;j<bagSize;++j){
-          fixedBag[j]=fixedBag[j+1];
+          fixedBag[j]=fixedBag[j+1]; //once item is found the indexes after the removed element get "pushed" forward one index
         }
         bagSize--;
       }

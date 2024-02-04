@@ -7,7 +7,8 @@ template<typename T>
 class AbstractBag
 {
 public:
-
+  
+  virtual ~AbstractBag(){} ;
   // add an item to the bag
   virtual bool add(const T & item) = 0;
   

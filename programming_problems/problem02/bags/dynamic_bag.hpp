@@ -45,9 +45,8 @@ public:
 
 private:
 
-  std::size_t size;
-  T* ptr;
-
+  int size; //keep track of bag size
+  T* ptr;   //pointer to the bag
 };
 
 #include "dynamic_bag.tpp"

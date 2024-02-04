@@ -36,8 +36,8 @@ public:
 
 private:
 
-  T fixedBag[maxsize];
-  int bagSize;
+  T fixedBag[maxsize];  //array of max size static variable
+  int bagSize;  //hold size of bag
 };
 
 #include "limited_size_bag.tpp"

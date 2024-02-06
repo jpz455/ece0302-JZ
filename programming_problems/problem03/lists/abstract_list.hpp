@@ -18,7 +18,7 @@ public:
   virtual bool insert(std::size_t position, const T& item) = 0;
 
   // remove item at position in the list using 0-based indexing
-  virtual bool remove(std::size_t position) = 0;
+  virtual bool remove(std::size_t position)=0;
 
   // remove all items from the list
   virtual void clear() = 0;

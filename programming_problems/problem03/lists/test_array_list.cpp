@@ -11,15 +11,16 @@ TEST_CASE( "Test", "[ArrayList]" ) {
   ArrayList<int> list;
 }
 
-TEST_CASE("Test ArrayList", "[ArrayList]") {
+TEST_CASE("Test empty List", "[ArrayList]") {
     ArrayList<int> list;
+      
+      REQUIRE(list.isEmpty());
+      REQUIRE(list.getLength() == 0);
 
-    SECTION("Test empty list") {
-        REQUIRE(list.isEmpty());
-        REQUIRE(list.getLength() == 0);
-    }
-
-    SECTION("Test insert and getEntry") {
+}
+    
+TEST_CASE("Test insert and getting entry", "[ArrayList]") {
+        ArrayList<int> list;
         list.insert(0, 10);
         list.insert(1, 20);
         list.insert(2, 30);
@@ -28,9 +29,10 @@ TEST_CASE("Test ArrayList", "[ArrayList]") {
         REQUIRE(list.getEntry(0) == 10);
         REQUIRE(list.getEntry(1) == 20);
         REQUIRE(list.getEntry(2) == 30);
-    }
+}
 
-    SECTION("Test remove") {
+TEST_CASE("Test remove", "[ArrayList]") {
+   ArrayList<int> list;
         list.insert(0, 10);
         list.insert(1, 20);
         list.insert(2, 30);
@@ -40,13 +42,13 @@ TEST_CASE("Test ArrayList", "[ArrayList]") {
         REQUIRE(list.getEntry(0) == 10);
         REQUIRE(list.getEntry(1) == 30);
 
-        // Test removing from both ends
         REQUIRE(list.remove(0) == true);
         REQUIRE(list.remove(0) == true);
         REQUIRE(list.isEmpty());
-    }
+}
 
-    SECTION("Test clear") {
+TEST_CASE("Test clear", "[ArrayList]") {
+    ArrayList<int> list;
         list.insert(0, 10);
         list.insert(1, 20);
         list.insert(2, 30);
@@ -55,9 +57,10 @@ TEST_CASE("Test ArrayList", "[ArrayList]") {
 
         REQUIRE(list.isEmpty());
         REQUIRE(list.getLength() == 0);
-    }
+}
 
-    SECTION("Test setEntry") {
+TEST_CASE("Test setting entry", "[ArrayList]") {
+    ArrayList<int> list;
         list.insert(0, 10);
         list.insert(1, 20);
         list.insert(2, 30);
@@ -65,7 +68,17 @@ TEST_CASE("Test ArrayList", "[ArrayList]") {
         list.setEntry(1, 25);
         REQUIRE(list.getEntry(1) == 25);
 
-        // Test setting an entry out of bounds
-        list.setEntry(5, 50); // This should not cause an error
-    }
+      
+        list.setEntry(5, 50);
 }
+TEST_CASE("Testing invalid bounds and inserts", "[ArrayList]") {
+    ArrayList<int> list;
+        list.insert(0, 10);
+        list.insert(1, 20);
+        list.insert(2, 30);
+
+        REQUIRE(list.getEntry(5) == 0); 
+
+      
+        REQUIRE(list.insert(5, 50) == false);
+    }

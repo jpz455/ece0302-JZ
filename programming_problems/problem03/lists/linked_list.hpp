@@ -46,7 +46,8 @@ public:
 
 private:
 
-  //TODO
+  Node<T> *headptr;
+  size_t listSize;
   
 };
 

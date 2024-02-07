@@ -45,9 +45,8 @@ public:
   void setEntry(std::size_t position, const T& newValue);
 
 private:
-  T* arrayList;
-  size_t listSize;
-  size_t listCapacity;
+  T* arrayList; //pointer to list
+  size_t listSize;  //keep track of size of the list
 };
 
 #include "array_list.tpp"

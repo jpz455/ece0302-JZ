@@ -45,10 +45,8 @@ public:
   void setEntry(std::size_t position, const T& newValue);
 
 private:
-
-  Node<T> *headptr;
-  size_t listSize;
-  
+  Node<T> *headptr; //points to head node
+  size_t listSize; //keep track of list size
 };
 
 #include "linked_list.tpp"

@@ -8,6 +8,7 @@ template <typename T>
 class AbstractList
 {
 public:
+  virtual ~AbstractList (){};
   // determine if a list is empty
   virtual bool isEmpty() const noexcept = 0;
 

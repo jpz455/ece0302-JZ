@@ -4,13 +4,17 @@
 #include <string>
 #include <vector>
 
+
+
+
 class FindPalindrome{
 
 private:
 	// private stuff that you define and implement goes here...
 	
-	// ...
-	
+	std::vector<std::string> inputWordList;						// words contained in class
+	std::vector<std::vector<std::string>> palindromes;		// vector of word lists of all pdrs
+
 	// private stuff that you are given or is specified in the project
 	// description...
 	/** recursive findPalindrome internal method (you write this 
@@ -18,7 +22,7 @@ private:
 	    change the signature. The method must call itself recursively.
 	    Failure to follow either of the above two rules will result in
 	    a grade of zero for the project. */
-	void recursiveFindPalindromes(std::vector<std::string> candidateStringVector, 
+	void recursiveFindPalindromes(std::vector<std::string> currentCandidateVector, 
 			   	                  std::vector<std::string> currentStringVector);
 	
 	/** function to see if a string is a palindrome (provided).
@@ -27,6 +31,10 @@ private:
 	  do not want to use a recursive version for this test (as it is 
 	  inefficient). You may change the signature of this function. */
 	bool isPalindrome(std::string currentString) const;
+
+
+	
+	bool preCheck();
 	
 public:
 	/** Constructor for the FindPalindrome object. */
@@ -98,7 +106,7 @@ public:
 	    palindrome is returned as a vector of strings, where the strings include
 	    all current strings added to the FindPalindrome instance.
 	@return  A vector of vectors containing all palindromes. */
-	std::vector< std::vector<std::string> > toVector() const;
+	std::vector<std::vector<std::string>> toVector() const;
 
 };
 

@@ -20,3 +20,4 @@ TEST_CASE("test recursion", "[FindPalindrome]"){
 	REQUIRE(b.number() == 6);
 }
 
+

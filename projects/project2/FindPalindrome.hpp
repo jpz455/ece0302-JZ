@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 class FindPalindrome{
 
 private:
@@ -11,7 +12,6 @@ private:
 	
 	std::vector<std::vector<std::string>> palindromes; 
 	std::vector<std::string> wordInput; 
-	
 	int palindromeCount;
 
 	

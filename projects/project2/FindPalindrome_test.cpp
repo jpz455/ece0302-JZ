@@ -24,51 +24,53 @@ TEST_CASE("test recursion", "[FindPalindrome]"){
 
 TEST_CASE( "Test duplicate words", "[FindPalindrome]" )
 {
-	FindPalindrome b;
-	REQUIRE(b.add("TaCoCaT"));
-	REQUIRE(b.number() == 1);
-	REQUIRE(!b.add("tAcOcAt"));
-	REQUIRE(b.number() == 1);
+	FindPalindrome pal;
+	REQUIRE(pal.add("TaCoCaT"));
+	REQUIRE(pal.number() == 1);
+	REQUIRE_FALSE(pal.add("tacocat"));
+	REQUIRE(pal.number() == 1);
 }
 
-TEST_CASE( "Test an english sentence", "[FindPalindrome]" )
+TEST_CASE( "Test an english sentence and add a vector of strings method", "[FindPalindrome]" )
 {
-	FindPalindrome b;
-	vector<string> v;
-	v.push_back("Was");
-	v.push_back("IT");
-	v.push_back("a");
-	v.push_back("cat");
-	v.push_back("I");
-	v.push_back("SAW");
-	REQUIRE(b.add(v));
-	REQUIRE(b.number() == 2);
+	FindPalindrome pal;
+	vector<string> sentence;
+	sentence.push_back("murder");
+	sentence.push_back("for");
+	sentence.push_back("a");
+	sentence.push_back("jar");
+	sentence.push_back("of");
+	sentence.push_back("red");
+	sentence.push_back("rum");
+	REQUIRE(pal.add(sentence));
+	REQUIRE(pal.number() == 2);
 }
 
 
-TEST_CASE( "test properties", "[FindPalindrome]" )
+TEST_CASE( "test add vector", "[FindPalindrome]" )
 {
-	FindPalindrome b;
-	vector<string> v(1);
-	vector<string> v1(1);
-	v[0] = "kayak";
-	v1[0] = "kayaking";
-	REQUIRE(b.cutTest1(v));
-	REQUIRE(b.cutTest2(v, v1));
-	v[0] = "car";
-	v1[0] = "pizza";
-	REQUIRE(!b.cutTest1(v));
-	REQUIRE(!b.cutTest2(v, v1));
+	FindPalindrome pal;
+	vector<string> test(2);
+	vector<string> test2(2);
+	
+	test.push_back("LEVEL!");
+	test.push_back("le0el");
+
+	test2[0] = "leVel";
+	test2[1] = "LEVEL";
+	
+	REQUIRE_FALSE(pal.add(test));
+	REQUIRE_FALSE(pal.add(test2));
+	
 }
 
-TEST_CASE( "Clear", "[FindPalindrome]" )
+TEST_CASE( "test clear method", "[FindPalindrome]" )
 {
-	FindPalindrome b;
-	REQUIRE(b.add("kayak"));
-	REQUIRE(b.number() == 1);
-	b.clear();
-	REQUIRE(b.number() == 0);
-	REQUIRE(b.add("flower"));
-	REQUIRE(b.number() == 0);
+	FindPalindrome pal;
+	REQUIRE(pal.add("noon"));
+	REQUIRE(pal.number() == 1);
+	pal.clear();
+	REQUIRE(pal.number() == 0);
 }
+
 

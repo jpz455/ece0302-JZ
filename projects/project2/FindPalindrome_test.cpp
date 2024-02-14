@@ -12,6 +12,15 @@ TEST_CASE( "Test adding a non-allowable word", "[FindPalindrome]" )
 	REQUIRE(!b.add("kayak1"));
 }
 
+TEST_CASE (" test adding single letters","[FindPalindrome]"){
+	FindPalindrome b;
+
+	REQUIRE(b.add("e"));
+	REQUIRE(b.number()==0);
+	REQUIRE(b.add("c"));
+	REQUIRE(b.number()==0);
+}
+
 TEST_CASE("test recursion", "[FindPalindrome]"){
 	FindPalindrome b;
 

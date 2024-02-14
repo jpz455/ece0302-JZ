@@ -100,10 +100,14 @@ bool FindPalindrome::isPalindrome(string currentString) const
 	convertToLowerCase(currentString);
 	// see if the characters are symmetric...
 	int stringLength = currentString.size();
+	if(stringLength ==1){
+		return false;
+	}
 	for (int i=0; i<stringLength/2; i++) {
 		if (currentString[i] != currentString[stringLength - i - 1]) {
 			return false;
 		}
+		
 	}
 	return true;
 }

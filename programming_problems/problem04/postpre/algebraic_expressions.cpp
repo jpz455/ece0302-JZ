@@ -41,7 +41,7 @@ bool isPost(string s) {
   return (firstChar == 0);
 }
 
-void convert(const std::string &postfix, std::string &prefix) {
+void convert( std::string &postfix, std::string &prefix) {
     
     std::stack<std::vector<std::string>> stack;
     //precondition
@@ -74,10 +74,11 @@ void convert(const std::string &postfix, std::string &prefix) {
         stack.push(operate);
         }
     }
-    //loops through the stack to assign back to the prefix notation
+    //assign a final vector to the stack that is now in prefix notation
     std::vector<std::string> final = stack.top();
-    for (const std::string &str : final) {
-      prefix += str;
+    //loops through the stack to assign back to the prefix notation string
+    for (const std::string &c : final) {
+      prefix += c;
     }
 }
 }

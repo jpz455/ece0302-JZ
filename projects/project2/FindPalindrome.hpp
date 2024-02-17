@@ -12,7 +12,7 @@ private:
 	
 	std::vector<std::vector<std::string>> palindromes; 
 	std::vector<std::string> wordInput; 
-	int palindromeCount;
+	
 
 	
 	// private stuff that you are given or is specified in the project

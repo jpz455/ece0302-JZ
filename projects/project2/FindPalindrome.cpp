@@ -59,26 +59,24 @@ static string VtoS(vector<string> vstr)
 void FindPalindrome::recursiveFindPalindromes(vector<string> candidateStringVector,
                                               vector<string> currentStringVector)
 {
-    if(cutTest2(candidateStringVector,currentStringVector))
+    
     //BASE: current string is empty so only need to check if canidate is a palindrome
         if (currentStringVector.empty()) {
         //form a single string from vector of strings in order to test 
         string candidateStr = VtoS(candidateStringVector);
         if (isPalindrome(candidateStr)) {
             palindromes.push_back(candidateStringVector); //adds to overall vector of palindromes if tests are passed
-            //increment the number of total palindromes
-            palindromeCount++;
             return;
         }
         
     }
-
+	if(cutTest2(candidateStringVector,currentStringVector)){
     //RECURRING CASE: when current isnt empty program will recurrently call the function to see what words will be added to overall palindrome list
     for (size_t i = 0; i < currentStringVector.size();++i) {
        //populating candidate string vector with the possible palindrome words in current string vector
         candidateStringVector.push_back(currentStringVector[i]);
         
-        //create a new vector to recur without the word that was just added above
+        //create a new vector to recur with a vector of strings without the word that was just added above
         vector<string> nextCurrent(currentStringVector.begin(), currentStringVector.begin() + i);
         nextCurrent.insert(nextCurrent.end(), currentStringVector.begin() + i + 1, currentStringVector.end());
         
@@ -88,6 +86,7 @@ void FindPalindrome::recursiveFindPalindromes(vector<string> candidateStringVect
         //clear word afterwards
         candidateStringVector.pop_back();
     }
+	}
 }
   
 
@@ -146,7 +145,7 @@ bool FindPalindrome::cutTest1(const vector<string> & stringVector)
     int odd = 0;
 
     for (int count : charFreq) {
-        if (count % 2 != 0) { //not divisable by 2 would indicate and odd amount
+        if (count % 2 != 0) { //not divisable by 2 would indicate an odd amount
             odd++;
         }
     }
@@ -173,7 +172,7 @@ bool FindPalindrome::cutTest2(const vector<string> & stringVector1, const vector
 	}
 	else{
         //string 2 is bigger than string 1 so string 2 should contain all the elements of string 1
-		for (unsigned int i = 0; i < stringV1.size(); i++){
+		for (int i = 0; i < stringV1.size(); i++){
 			if (stringV2.find(stringV1[i]) < 0 || stringV2.find(stringV1[i]) > stringV2.size())
 				return false;
 		}
@@ -198,8 +197,8 @@ bool FindPalindrome::add(const string & value)
 		{
 			palindromes.clear();
 
-			vector<string> candidate;
-			recursiveFindPalindromes(candidate, wordInput); //would call the base case in the recursive function
+			
+			recursiveFindPalindromes(vector<string>(), wordInput); //would call the base case in the recursive function
 		}
     }
 	return true;
@@ -207,40 +206,43 @@ bool FindPalindrome::add(const string & value)
 
 bool FindPalindrome::add(const vector<string> & stringVector)
 {
-	string temp1,temp2,temp3; 
+	string testString,compareString,currentCompareString; 
+	//have to loop through every string of vector
     for(int i=0;i<stringVector.size();i++){
-		temp1 = stringVector[i]; 
-		convertToLowerCase(temp1); 
-		for(int j=0;j<temp1.length();j++){
-				if(!isalpha(temp1[j])){
+		//testString will get the incremented string of stringvector that wants to be added
+		testString = stringVector[i]; 
+		convertToLowerCase(testString); 
+		for(int j=0;j<testString.length();j++){
+			//checking for invalid characters by using isalpha
+				if(!isalpha(testString[j])){
 					return false;
 				}
 		}
-		for(int j=0;j<wordInput.size();j++){
-			temp2 = wordInput[j];
-			convertToLowerCase(temp2);
-			if(temp1.compare(temp2) == 0){
-				return false;
+		//inner loop to check that stringVector doesnt have a duplicate of itself that is trying to be added
+		for(int k=i+1;k<stringVector.size();k++){
+			//compareString will get the next index of string within stringVector to compare to itself for duplication
+			compareString = stringVector[k];
+			convertToLowerCase(compareString);
+			if(testString.compare(compareString) == 0){
+				return false; //returns if stringVector already has that string within itself
 			}
 		}
-		for(int j=0;j<stringVector.size();j++){
-			if(i == j){
-				j++;
-            }
-			if(j == stringVector.size()){
-				break;
-			}
-
-			temp2 = stringVector[j];
-			convertToLowerCase(temp2);
-			if(temp1.compare(temp2) == 0){
+		//inner loop to compare each string inside of the word input vector with the incremented string testString in stringvector
+		for(int j=0;j<wordInput.size();j++){
+			//currentCompareString will get the first string in the vector of word input
+			currentCompareString= wordInput[j];
+			convertToLowerCase(currentCompareString);
+			//this checks for duplicate strings in both vector of strings
+			if(testString.compare(currentCompareString) == 0){
 				return false;
 			}
 		}
 	}
+	//once all loops are through the indexes (or strings) that were valid and not duplicates are added onto the end of wordInput
 	for(int i=0;i<stringVector.size();i++){
 		wordInput.push_back(stringVector[i]); 
 	}
+	//run cutTest1 and call recursive function with empty candidate vector of strings
 	if(cutTest1(wordInput) == true){
 		palindromes.clear();
 		recursiveFindPalindromes(vector<string>(),wordInput); 
@@ -248,7 +250,7 @@ bool FindPalindrome::add(const vector<string> & stringVector)
 	return true; 
 }
 
-vector< vector<string> > FindPalindrome::toVector() const
+vector< vector<string>> FindPalindrome::toVector() const
 {
 	return palindromes;
 }

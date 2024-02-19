@@ -37,6 +37,7 @@ TEST_CASE("Test add vector of strings method", "[FindPalindrome]"){
 	test[2] = "madam"/**/"in"/**/"eden"/**/"im"/**/"adam";
 	
 	REQUIRE(b.add(test[0]));
+	REQUIRE(!b.add(test[0]));
 	REQUIRE(b.add(test[1]));
 	REQUIRE(b.add(test[2]));
 	REQUIRE(b.number()==1);
@@ -59,6 +60,8 @@ TEST_CASE("test recursion", "[FindPalindrome]"){
     REQUIRE(b.add("aaaa"));
 
     REQUIRE(b.number() == 24); //= to 4!
+
+
 }
 
 TEST_CASE( "Test duplicate words", "[FindPalindrome]" )
@@ -84,6 +87,9 @@ TEST_CASE( "Test an english sentence with add string method", "[FindPalindrome]"
 	
 	REQUIRE(b.add(sentence));
 	REQUIRE(b.number() == 1);
+	sentence.push_back("!");
+	b.clear();
+	REQUIRE_FALSE(b.add(sentence));
 	
 }
 

@@ -1,79 +1,128 @@
 #include "linked_list.hpp"
 
 template <typename T>
-LinkedList<T>::LinkedList()
-{
-  //TODO
+LinkedList<T>::LinkedList(){
+  headptr=nullptr;
+  listSize=0;
 }
 
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
-  //TODO
+  clear(); //cannot just deallocate the head pointer because other pointers available for other nodes, must call the clear method
 }
 
 template <typename T>
-LinkedList<T>::LinkedList(const LinkedList<T>& x)
-{
-  //TODO
+LinkedList<T>::LinkedList(const LinkedList<T>& x){
+  headptr=nullptr;
+  listSize=0;
+  Node<T> *presentNode = x.headptr; //assign new node to parameter list
+  while(presentNode!=nullptr){ //loops through every pointer of the list
+    insert(listSize,presentNode->getItem()); //insert item from original list to current node pointer
+    presentNode=presentNode->getNext(); //increment node
+  }
 }
 
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(LinkedList<T> x)
 {
-  //TODO
+  swap(x);
   return *this;
 }
 
 template <typename T>
 void LinkedList<T>::swap(LinkedList& x) 
 {
-  //TODO
+  std::swap(headptr,x.headptr);
+  std::swap(listSize,x.listSize);
 }
 
 template <typename T>
 bool LinkedList<T>::isEmpty() const noexcept
 {
-  //TODO
-  return true;
+  return (listSize==0);
 }
 
 template <typename T>
 std::size_t LinkedList<T>::getLength() const noexcept
 {
-  //TODO
-  return 0;
+  return listSize;
 }
 
 template <typename T>
 bool LinkedList<T>::insert(std::size_t position, const T& item)
 {
-  //TODO
-  return true;
+  if (position > listSize) {//out of bounds access error
+        return false;
+    }
+    if (position == 0) { //trying to insert a new first item requires a new head pointer
+        headptr = new Node<T>(item, headptr);
+    } else {
+        Node<T>* current = headptr; //create a pointer to the head node
+        for (std::size_t i = 0; i < position - 1; ++i) {
+            current = current->getNext(); //increment the placeholder pointer until the position index to insert
+        }
+        current->setNext(new Node<T>(item, current->getNext())); //creating a new next node to insert the item
+    }
+    ++listSize;
+    return true;
 }
 
 template <typename T>
 bool LinkedList<T>::remove(std::size_t position)
 {
-  //TODO
-  return true;
+  if (position >= listSize) { //out of bounds error
+        return false;
+    }
+  else if (isEmpty()){ //empty bag cannot have anything removed 
+    return false;
+  }
+    Node<T>* temp = nullptr; // creating a new pointer to keep track of position
+    if (position == 0) { //trying to remove first item in the list/remove head pointer
+        temp = headptr;
+        headptr = headptr->getNext(); //reassigning the head pointer to the next item in the list
+    } else {
+        Node<T>* current = headptr;
+        for (std::size_t i = 0; i < position - 1; ++i) {
+            current = current->getNext(); //set the pointer to the previous index of the position
+        }
+        temp = current->getNext(); //overwrite the position to remove it
+        current->setNext(temp->getNext());
+    }
+    delete temp;
+    --listSize;
+    return true;
 }
 
 template <typename T>
 void LinkedList<T>::clear()
 {
-  //TODO
+  while (!isEmpty()) { //have to increment through multiple pointers for every item in the list 
+        remove(0);    //cannot just set size to 0 and set head pointer to null
+    }
 }
 
 template <typename T>
 T LinkedList<T>::getEntry(std::size_t position) const
 {
-  //TODO
-  return T();
+  if (position >= listSize) { //out of bounds error return empty T object
+       return T();
+  }
+    Node<T>* current = headptr; //temporary node pointer to head pointer
+    for (std::size_t i = 0; i < position; ++i) {
+        current = current->getNext(); //increment placeholder pointer until position wanted
+    }
+    return current->getItem(); //return that index
 }
 
 template <typename T>
 void LinkedList<T>::setEntry(std::size_t position, const T& newValue)
 {
-  //TODO
+  if (position < listSize) { //can only set entry for position within the list size
+        Node<T>* current = headptr; //temporary pointer to find the entry
+        for (std::size_t i = 0; i < position; ++i) {
+            current = current->getNext(); //increment temporary pointer to find the entry
+        }
+        current->setItem(newValue); //set that pointer to parameter value
+    }
 }

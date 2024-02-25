@@ -91,3 +91,15 @@ void ArrayList<T>::setEntry(std::size_t position, const T& newValue) {
         arrayList[position] = newValue;
     }
 }
+
+int gcd(int n, int m){
+  if(m==0)
+      return n;
+  if (n<m){
+    int temp = n;
+    n=m;
+    m=temp;
+  }
+int r = n%m;
+return gcd(m,r);    
+}

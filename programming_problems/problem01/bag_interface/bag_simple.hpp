@@ -25,6 +25,8 @@ public:
   bool contains(const T& entry) const;
 
   static const std::size_t MAXSIZE = 100;
+
+  
   
 private:
   // implementation using fixed automatic storage

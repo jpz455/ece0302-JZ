@@ -44,6 +44,8 @@ public:
   // set the value of the item at position 
   void setEntry(std::size_t position, const T& newValue);
 
+  int gcd(int n, int m);
+
 private:
   T* arrayList; //pointer to list
   size_t listSize;  //keep track of size of the list

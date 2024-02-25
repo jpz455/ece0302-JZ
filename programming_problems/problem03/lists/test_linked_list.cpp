@@ -89,3 +89,17 @@ TEST_CASE("Test removing", "[LinkedList]") {
         REQUIRE(emptyList.getLength() == 0);
         REQUIRE(emptyList.isEmpty());
     }
+TEST_CASE("",""){
+    LinkedList<int> examList;
+    examList.insert(0,20);
+    examList.insert(1,45);
+    examList.insert(2,500);
+    examList.insert(1,60);
+    examList.insert(2,30);
+    examList.insert(3,100);
+    examList.remove(2);
+
+    int answer[5]={20,60,100,45,500};
+    for(int i=0;i<5;i++)
+    REQUIRE(examList.getEntry(i)==answer[i]);
+}

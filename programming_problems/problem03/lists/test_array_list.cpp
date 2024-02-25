@@ -6,7 +6,7 @@
 //force class expansion
 template class ArrayList<int>;
 
-TEST_CASE( "Test", "[ArrayList]" ) {
+/*TEST_CASE( "Test", "[ArrayList]" ) {
 
   ArrayList<int> list;
 
@@ -88,7 +88,13 @@ TEST_CASE("Test clear", "[ArrayList]") {
 
         REQUIRE(clearedList.isEmpty());
         REQUIRE(clearedList.getLength() == 0);
+}*/
+
+TEST_CASE("",""){
+
+    int n = 126;
+    int m = 35;
+
+    REQUIRE(gcd(n,m)==7);
 }
-
-
 

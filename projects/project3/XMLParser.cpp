@@ -24,6 +24,30 @@ XMLParser::~XMLParser()
 //*********HELPER FUNCTIONS TO HELP SECTION OFF CODE***********************//
 
 //validate characters
+
+bool XMLParser::isValid(const std::string &tagName) const {
+        // Check if the tag name is empty or begins with invalid characters
+        if (tagName.empty() || tagName[0] == '-' || tagName[0] == '.' || std::isdigit(tagName[0])) {
+            return false;
+        }
+
+        // Check if the tag name contains any invalid characters
+        for (char c : tagName) {
+            if (!(std::isalnum(c) || c == '_' || c == '-' || c == '.')) {
+                // Check for invalid characters
+                if (c == ' ' || c == '!' || c == '"' || c == '#' || c == '$' || c == '%' ||
+                    c == '&' || c == '\'' || c == '(' || c == ')' || c == '*' || c == '+' ||
+                    c == ',' || c == '/' || c == ';' || c == '<' || c == '=' || c == '>' ||
+                    c == '?' || c == '@' || c == '[' || c == '\\' || c == ']' || c == '^' ||
+                    c == '`' || c == '{' || c == '|' || c == '}' || c == '~') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 bool XMLParser::valTag(char c) {
     return (c >= 'a' && c <= 'z') ||
            (c >= 'A' && c <= 'Z') ||
@@ -35,6 +59,8 @@ bool XMLParser::valTag(char c) {
 bool XMLParser::tokeCont(const std::string &inputString, int &index, std::string &temp){
     // Read content until '<' or end of string
     while (index < inputString.length() && inputString[index] != '<') {
+        
+        
         temp.push_back(inputString[index]);
         index++;
     }
@@ -47,14 +73,29 @@ bool XMLParser::tokeCont(const std::string &inputString, int &index, std::string
 
 //cannot tell the difference between start or end tokens until the index is updated accordingly
 bool XMLParser::tokeStartEnd(const std::string &inputString, int &index, std::string &temp){
-     index++; // Move past '<'
+       index++; // Move past '<'
     // Read tag name
     while (inputString[index] != '>' && inputString[index] != '/' && !std::isspace(inputString[index])) {
+       if(!valTag(inputString[index]))
+       return false;
+       
         temp.push_back(inputString[index]);
         index++;
     }
-    // Create token for start tag or empty tag
+    // Validate tag name
+    if (!isValid(temp)) {
+        return false; // Invalid tag name
+    }
+
+    // Check for empty tag
+    bool isEmptyTag = false;
     if (inputString[index] == '/') {
+        isEmptyTag = true;
+        index++; // Move past '/'
+    }
+
+    // Create token for start or empty tag
+    if (isEmptyTag) {
         // Empty tag
         TokenStruct tempT = TokenStruct{StringTokenType::EMPTY_TAG, temp};
         tokenizedInputVector.push_back(tempT);
@@ -65,19 +106,27 @@ bool XMLParser::tokeStartEnd(const std::string &inputString, int &index, std::st
     }
     elementNameBag->add(temp); // Add tag name to element bag
     temp.clear();
-    // Move past '>' or '/>'
+    // Move past '>'
     while (inputString[index] != '>') {
         index++;
     }
     return true;
+
 };
 
 //takes care of end tokens
 bool XMLParser::tokeEnd(const std::string &inputString, int &index, std::string &temp){
     index += 2; // Move past '</'
     // Read until '>'
+    
+    
     while (inputString[index] != '>') {
+
+        if(!valTag(inputString[index]))
+        return false;
+        
         temp.push_back(inputString[index]);
+
         index++;
     }
     // Create token for end tag
@@ -106,13 +155,17 @@ bool XMLParser::tokeDec(const std::string &inputString, int &index, std::string 
 
 // TODO: Implement the tokenizeInputString method
 bool XMLParser::tokenizeInputString(const std::string &inputString) {
-   parseStack->clear();
+    parseStack->clear();
+    clear();
     std::string temp;
     int index = 0;
 
+    // Check if the input string is empty or consists of only whitespace characters
+    if(inputString.empty() || std::all_of(inputString.begin(), inputString.end(), [](char c) { return std::isspace(c); }))
+        return false;
+
     while (index < inputString.length()) {
-       //*****START OF A MARKUP********//
-       
+        //*****START OF A MARKUP********//
         if (inputString[index] == '<') {
             int index2 = index + 1;
             // Check for nested brackets
@@ -124,7 +177,7 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
                 index2++;
             }
 
-           //********DECLARATION TOKEN************//
+            //********DECLARATION TOKEN************//
             if (inputString[index + 1] == '\?') {
                 // Tokenize declaration
                 if (!tokeDec(inputString, index, temp)) {
@@ -147,41 +200,28 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
             }
             index = index2 + 1;
         } 
-
         //********CONTENT TOKEN************// 
         else if (!std::isspace(inputString[index])) {
             // Tokenize content
             if (!tokeCont(inputString, index, temp)) {
                 return false;
             }
-        } 
+        }
+        // Check if backslash character is encountered
+        else if (inputString[index] == '\\') {
+            return false;
+        }
         else {
             index++;
         }
     }
-    return true;
-}
 
-// TODO: Implement the parseTokenizedInput method here
-bool XMLParser::parseTokenizedInput()
-{
-   for (int i = 0; i < tokenizedInputVector.size(); ++i) {
-        if (tokenizedInputVector[i].tokenType == START_TAG) {
-            parseStack->push(tokenizedInputVector[i].tokenString);
-        } else if (tokenizedInputVector[i].tokenType == END_TAG) {
-            if (parseStack->isEmpty()) {
-                return false;
-            }
-            string topOfStack = parseStack->peek();
-            if (tokenizedInputVector[i].tokenString != topOfStack) {
-                return false;
-            }
-            parseStack->pop();
-        }
-    }
-    if (!parseStack->isEmpty()) {
+    // Check if nothing was tokenized
+    if (tokenizedInputVector.empty()) {
         return false;
     }
+
+    tokeSuccess = true;
     return true;
 }
 

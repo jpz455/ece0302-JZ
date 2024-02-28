@@ -7,7 +7,7 @@
 using namespace std;
 
 // TODO Implement tests of your Stack class and XMLParser class here
-
+/**/
 TEST_CASE( "Test Bag add", "[ADT Bag]" )
 {
 	   INFO("Hint: testing Bag add()");
@@ -199,5 +199,28 @@ TEST_CASE( "Test XMLParser Final Handout-0", "[XMLParser]" )
 		REQUIRE(myXMLParser.containsElementName("color_swatch"));
 		REQUIRE(myXMLParser.frequencyElementName("color_swatch") == 15);
 }
+TEST_CASE("Test invalid","[XMLParser]"){
 
+	INFO("Hint: Testing various strings, clear in between");
+
+	XMLParser myXMLParser;
+	XMLParser my2;
+	std::string test = " <someTag>Content</someTag> ";
+	std::string testS2 = "<?xml version =\"1.0\"?><html><head>Content here</head><body>Content here<empty src=\"f\"/></body></html>";
+	REQUIRE(my2.tokenizeInputString(test));
+	bool test2;
+	test2 = my2.parseTokenizedInput();
+	REQUIRE(test2);
+    REQUIRE( !myXMLParser.tokenizeInputString("<.Invalid/>") );
+	REQUIRE( !myXMLParser.tokenizeInputString("</test/>") );
+	REQUIRE( !myXMLParser.tokenizeInputString("") );
+	 REQUIRE( !myXMLParser.tokenizeInputString(" ") );
+
+	REQUIRE( !myXMLParser.parseTokenizedInput() );
+	 REQUIRE( myXMLParser.tokenizeInputString(" <tag /> ") );
+
+	 REQUIRE( !myXMLParser.tokenizeInputString(" \n") );
+
+	 REQUIRE( myXMLParser.tokenizeInputString(" some t?ex/.t ") );
+}
 

@@ -16,7 +16,9 @@ XMLParser::XMLParser()
 
 // TODO: Implement the destructor here
 XMLParser::~XMLParser()
-{
+{   
+    delete elementNameBag;
+    delete parseStack;
 	clear();
 }  // end destructor
 //*********HELPER FUNCTIONS TO HELP SECTION OFF CODE***********************//
@@ -187,6 +189,7 @@ bool XMLParser::parseTokenizedInput()
 void XMLParser::clear()
 {
     tokenizedInputVector.clear();
+    
     
    
 }

@@ -46,6 +46,7 @@ public:
 
   int gcd(int n, int m);
 
+
 private:
   T* arrayList; //pointer to list
   size_t listSize;  //keep track of size of the list

@@ -199,3 +199,5 @@ TEST_CASE( "Test XMLParser Final Handout-0", "[XMLParser]" )
 		REQUIRE(myXMLParser.containsElementName("color_swatch"));
 		REQUIRE(myXMLParser.frequencyElementName("color_swatch") == 15);
 }
+
+

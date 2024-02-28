@@ -28,10 +28,14 @@ private:
 	Stack<std::string>* parseStack;
 	/** Vector to store the tokenized input string and the token types */
 	std::vector<TokenStruct> tokenizedInputVector;
+	
   
   // You can add or change the private fields.
 
+
+
 public:
+
 	/** The class constructor.
 		@post  Creates an instance of the class that can be used to tokenize and parse an input string . */
 	XMLParser();
@@ -90,6 +94,12 @@ public:
 	void clear();
 	/** The class destructor. Must free all allocated memory. */
 	~XMLParser();
-}; // end XMLParser
+	bool valTag(char c);
+	bool tokeCont(const std::string &inputString, int &index, std::string &temp);
+	bool tokeStartEnd(const std::string &inputString, int &index, std::string &temp);
+	bool tokeEnd(const std::string &inputString, int &index, std::string &temp);
+	bool tokeDec(const std::string &inputString, int &index, std::string & temp);
+
+	}; // end XMLParser
 
 #endif

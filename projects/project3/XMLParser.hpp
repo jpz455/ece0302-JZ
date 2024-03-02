@@ -36,6 +36,7 @@ private:
 	bool isValid(const std::string &tagName)const;
 
 	bool tokeSuccess=false;
+	bool parseSuccess=false;
   
   // You can add or change the private fields.
 

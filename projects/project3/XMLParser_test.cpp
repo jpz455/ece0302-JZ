@@ -7,7 +7,7 @@
 using namespace std;
 
 // TODO Implement tests of your Stack class and XMLParser class here
-/**/
+
 TEST_CASE( "Test Bag add", "[ADT Bag]" )
 {
 	   INFO("Hint: testing Bag add()");
@@ -206,11 +206,17 @@ TEST_CASE("Test invalid","[XMLParser]"){
 	XMLParser myXMLParser;
 	XMLParser my2;
 	std::string test = " <someTag>Content</someTag> ";
+
+	XMLParser my3;
 	std::string testS2 = "<?xml version =\"1.0\"?><html><head>Content here</head><body>Content here<empty src=\"f\"/></body></html>";
+	REQUIRE(my3.tokenizeInputString(testS2));
+	
+	REQUIRE( my3.parseTokenizedInput());
 	REQUIRE(my2.tokenizeInputString(test));
-	bool test2;
-	test2 = my2.parseTokenizedInput();
-	REQUIRE(test2);
+	REQUIRE(my2.parseTokenizedInput());
+	
+	
+	
     REQUIRE( !myXMLParser.tokenizeInputString("<.Invalid/>") );
 	REQUIRE( !myXMLParser.tokenizeInputString("</test/>") );
 	REQUIRE( !myXMLParser.tokenizeInputString("") );
@@ -224,3 +230,60 @@ TEST_CASE("Test invalid","[XMLParser]"){
 	 REQUIRE( myXMLParser.tokenizeInputString(" some t?ex/.t ") );
 }
 
+TEST_CASE("Tokenize and parse XML string") {
+    std::string xmlString = "<?xml?><head>sometext</head><body>sometext</body>";
+	std::string xmlString2 = "<empty/><tag>content</tag>";
+	std::string xmlString3 = "<tag1 <anothertag>>content</tag1>";
+
+    // Tokenize the XML string
+    XMLParser myXMLParser;
+	
+    bool tokenizeSuccess = myXMLParser.tokenizeInputString(xmlString);
+    REQUIRE(tokenizeSuccess); // Ensure tokenization succeeded
+
+    // Parse the tokenized input
+    bool parseSuccess = myXMLParser.parseTokenizedInput();
+    REQUIRE_FALSE(parseSuccess); // Ensure parsing failed because of incorrect structure
+
+	
+
+	bool tokenizeSuccess2 = myXMLParser.tokenizeInputString(xmlString2);
+    REQUIRE(tokenizeSuccess2); // Ensure tokenization succeeded
+
+    // Parse the tokenized input
+    bool parseSuccess2 = myXMLParser.parseTokenizedInput();
+    REQUIRE_FALSE(parseSuccess2); // Ensure parsing failed because of incorrect structure
+
+	bool tokenizeSuccess3 = myXMLParser.tokenizeInputString(xmlString3);
+    REQUIRE_FALSE(tokenizeSuccess3); // Ensure tokenization succeeded
+	REQUIRE( !myXMLParser.parseTokenizedInput() );
+    // Parse the tokenized input
+    bool parseSuccess3 = myXMLParser.parseTokenizedInput();
+    REQUIRE_FALSE(parseSuccess3); // Ensure parsing failed because of incorrect structure
+
+
+}
+
+TEST_CASE("nested","[myxmlparser]"){
+	std::string test = "<tag1 <anothertag>>content</tag1>";
+
+	XMLParser myXMLParser;
+
+	myXMLParser.tokenizeInputString(test);
+
+	REQUIRE( !myXMLParser.parseTokenizedInput() );
+	test = "<tag1>content<tag2cross></tag1></tag2cross>";
+	myXMLParser.tokenizeInputString(test);
+
+	REQUIRE( !myXMLParser.parseTokenizedInput() );
+	test = "<tag1>content<tag2cross></tag1></tag2cross>";
+	myXMLParser.tokenizeInputString(test);
+
+	REQUIRE( !myXMLParser.parseTokenizedInput() );
+
+	test = "<tag>content<empty/></tag>";
+
+	myXMLParser.tokenizeInputString(test);
+
+	REQUIRE( myXMLParser.parseTokenizedInput() );
+}

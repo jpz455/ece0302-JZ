@@ -86,13 +86,18 @@ bool XMLParser::tokeStartEnd(const std::string &inputString, int &index, std::st
     if (!isValid(temp)) {
         return false; // Invalid tag name
     }
-
-    // Check for empty tag
+    
     bool isEmptyTag = false;
-    if (inputString[index] == '/') {
-        isEmptyTag = true;
-        index++; // Move past '/'
+    while (index < inputString.length() && inputString[index] != '>') {
+        if (inputString[index] == '/') {
+            isEmptyTag = true;
+            break;
+        }
+        index++;
     }
+
+   
+
 
     // Create token for start or empty tag
     if (isEmptyTag) {
@@ -107,9 +112,7 @@ bool XMLParser::tokeStartEnd(const std::string &inputString, int &index, std::st
     elementNameBag->add(temp); // Add tag name to element bag
     temp.clear();
     // Move past '>'
-    while (inputString[index] != '>') {
-        index++;
-    }
+    
     return true;
 
 };
@@ -155,17 +158,21 @@ bool XMLParser::tokeDec(const std::string &inputString, int &index, std::string 
 
 // TODO: Implement the tokenizeInputString method
 bool XMLParser::tokenizeInputString(const std::string &inputString) {
-    parseStack->clear();
+   parseStack->clear();
+
     clear();
+
     std::string temp;
     int index = 0;
 
-    // Check if the input string is empty or consists of only whitespace characters
-    if(inputString.empty() || std::all_of(inputString.begin(), inputString.end(), [](char c) { return std::isspace(c); }))
+     if(inputString.empty() || (inputString.length() == 1 && inputString[0] == ' '))
         return false;
 
+
+   
     while (index < inputString.length()) {
-        //*****START OF A MARKUP********//
+       //*****START OF A MARKUP********//
+       
         if (inputString[index] == '<') {
             int index2 = index + 1;
             // Check for nested brackets
@@ -177,7 +184,7 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
                 index2++;
             }
 
-            //********DECLARATION TOKEN************//
+           //********DECLARATION TOKEN************//
             if (inputString[index + 1] == '\?') {
                 // Tokenize declaration
                 if (!tokeDec(inputString, index, temp)) {
@@ -200,6 +207,7 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
             }
             index = index2 + 1;
         } 
+
         //********CONTENT TOKEN************// 
         else if (!std::isspace(inputString[index])) {
             // Tokenize content
@@ -207,22 +215,77 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
                 return false;
             }
         }
-        // Check if backslash character is encountered
-        else if (inputString[index] == '\\') {
-            return false;
-        }
+        else if(tokenizedInputVector.empty() && inputString[index]== '\n')
+        return false;
+
         else {
             index++;
+           
         }
+    
     }
 
-    // Check if nothing was tokenized
-    if (tokenizedInputVector.empty()) {
+    tokeSuccess=true;
+    return true;
+}
+
+// TODO: Implement the parseTokenizedInput method here
+bool XMLParser::parseTokenizedInput() {
+    if (tokeSuccess) {
+        std::string firstStartElement = ""; // Store the name of the first encountered start tag
+        std::string lastEndElement = "";    // Store the name of the last encountered end tag
+    if(tokenizedInputVector[0].tokenType == EMPTY_TAG){
         return false;
     }
+        for (int i = 0; i < tokenizedInputVector.size(); ++i) {
+            // Handle XML declaration (skip it)
+            if (tokenizedInputVector[i].tokenType == DECLARATION) {
+                continue;
+            }
 
-    tokeSuccess = true;
-    return true;
+            // Check if it's a start tag
+            if (tokenizedInputVector[i].tokenType == START_TAG) {
+                // Store the name of the first encountered start tag
+                if (firstStartElement.empty()) {
+                    firstStartElement = tokenizedInputVector[i].tokenString;
+                }
+                parseStack->push(tokenizedInputVector[i].tokenString);
+            }
+            // Check if it's an end tag
+            else if (tokenizedInputVector[i].tokenType == END_TAG) {
+                // Store the name of the last encountered end tag
+                lastEndElement = tokenizedInputVector[i].tokenString;
+                // If the parse stack is empty, the document is invalid
+                if (parseStack->isEmpty()) {
+                    return false;
+                }
+                // Compare the end tag with the top of the parse stack
+                string topOfStack = parseStack->peek();
+                if (tokenizedInputVector[i].tokenString != topOfStack) {
+                    return false;
+                }
+                // Pop the tag from the stack
+                parseStack->pop();
+            }
+        }
+
+        // If the first start tag does not match the last end tag, the document is invalid
+        if (firstStartElement != lastEndElement) {
+            return false;
+        }
+
+        // If the parse stack is not empty, the document is invalid
+        if (!parseStack->isEmpty()) {
+            return false;
+        }
+
+        // If all checks passed, return true
+        parseSuccess=true;
+        return true;
+    }
+
+    // If tokenization was not successful, return false
+    return false;
 }
 
 // TODO: Implement the clear method here
@@ -242,6 +305,7 @@ vector<TokenStruct> XMLParser::returnTokenizedInput() const
 // TODO: Implement the containsElementName method
 bool XMLParser::containsElementName(const std::string &inputString) const
 {
+if(parseSuccess&&tokeSuccess){
 	    for (const auto &token : tokenizedInputVector) {
         if (token.tokenType == START_TAG || token.tokenType == END_TAG || token.tokenType == EMPTY_TAG) {
             size_t pos = token.tokenString.find(inputString);
@@ -251,12 +315,13 @@ bool XMLParser::containsElementName(const std::string &inputString) const
         }
     }
     return false;
+}
 
 }
 
 // TODO: Implement the frequencyElementName method
 int XMLParser::frequencyElementName(const std::string &inputString) const
-{
+{   
+    if(parseSuccess&&tokeSuccess)
 	return elementNameBag->getFrequencyOf(inputString);
 }
-

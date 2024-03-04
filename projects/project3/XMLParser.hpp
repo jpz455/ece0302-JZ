@@ -28,13 +28,21 @@ private:
 	Stack<std::string>* parseStack;
 	/** Vector to store the tokenized input string and the token types */
 	std::vector<TokenStruct> tokenizedInputVector;
-	bool valTag(char c);
-	bool tokeCont(const std::string &inputString, int &index, std::string &temp);
-	bool tokeStartEnd(const std::string &inputString, int &index, std::string &temp);
-	bool tokeEnd(const std::string &inputString, int &index, std::string &temp);
-	bool tokeDec(const std::string &inputString, int &index, std::string & temp);
-	bool isValid(const std::string &tagName)const;
+	//HELPER FUNCTIONS
 
+	//this will verify if the character within a tag name is valid
+	bool valTag(char c);
+	//function to pass a potential content token to
+	bool tokeCont(const std::string &inputString, int &index, std::string &temp);
+	//function to pass a potential start or empty token to
+	bool tokeStartEmp(const std::string &inputString, int &index, std::string &temp);
+	//function to pass a potential end token to
+	bool tokeEnd(const std::string &inputString, int &index, std::string &temp);
+	//function to pass a potential declaration token to
+	bool tokeDec(const std::string &inputString, int &index, std::string & temp);
+	//function that determines if the content within a token is valid
+	bool isValid(const std::string &tagName)const;
+	//bool variables to keep track of if tokenization and parsing was done so correctly
 	bool tokeSuccess=false;
 	bool parseSuccess=false;
   

@@ -235,32 +235,31 @@ TEST_CASE("Tokenize and parse XML string") {
 	std::string xmlString2 = "<empty/><tag>content</tag>";
 	std::string xmlString3 = "<tag1 <anothertag>>content</tag1>";
 
-    // Tokenize the XML string
+  
     XMLParser myXMLParser;
 	
     bool tokenizeSuccess = myXMLParser.tokenizeInputString(xmlString);
-    REQUIRE(tokenizeSuccess); // Ensure tokenization succeeded
+    REQUIRE(tokenizeSuccess); 
 
-    // Parse the tokenized input
+   
     bool parseSuccess = myXMLParser.parseTokenizedInput();
-    REQUIRE_FALSE(parseSuccess); // Ensure parsing failed because of incorrect structure
+    REQUIRE_FALSE(parseSuccess); 
 
 	
 
 	bool tokenizeSuccess2 = myXMLParser.tokenizeInputString(xmlString2);
-    REQUIRE(tokenizeSuccess2); // Ensure tokenization succeeded
+    REQUIRE(tokenizeSuccess2); 
 
-    // Parse the tokenized input
+    
     bool parseSuccess2 = myXMLParser.parseTokenizedInput();
-    REQUIRE_FALSE(parseSuccess2); // Ensure parsing failed because of incorrect structure
+    REQUIRE_FALSE(parseSuccess2); 
 
 	bool tokenizeSuccess3 = myXMLParser.tokenizeInputString(xmlString3);
-    REQUIRE_FALSE(tokenizeSuccess3); // Ensure tokenization succeeded
+    REQUIRE_FALSE(tokenizeSuccess3); 
 	REQUIRE( !myXMLParser.parseTokenizedInput() );
-    // Parse the tokenized input
+   
     bool parseSuccess3 = myXMLParser.parseTokenizedInput();
-    REQUIRE_FALSE(parseSuccess3); // Ensure parsing failed because of incorrect structure
-
+    REQUIRE_FALSE(parseSuccess3); 
 
 }
 
@@ -295,6 +294,7 @@ TEST_CASE("nested","[myxmlparser]"){
 	REQUIRE(!myXMLParser.parseTokenizedInput());
 	
 }
+
 TEST_CASE("frequency test", "[myxmlparser]") {
     std::string test1 = "<test>stuff</test>";
 	std::string test2 = " <someTag>Content</someTag> ";
@@ -311,4 +311,72 @@ TEST_CASE("frequency test", "[myxmlparser]") {
 
     
     REQUIRE(myXML.frequencyElementName("test") == 1);
+}
+
+TEST_CASE("test frequency and contains", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "<begin info=\"value\">stuff</begin>";
+
+    REQUIRE(myXMLParser.tokenizeInputString(test));
+    REQUIRE(myXMLParser.parseTokenizedInput());
+
+    REQUIRE(myXMLParser.containsElementName("begin"));
+    REQUIRE(myXMLParser.frequencyElementName("begin") == 1);
+   
+}
+
+TEST_CASE("Test multiple elements", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "<stuff1>info1<stuff2></stuff2>info2</stuff1>";
+
+    REQUIRE(myXMLParser.tokenizeInputString(test));
+    REQUIRE(myXMLParser.parseTokenizedInput());
+
+    REQUIRE(myXMLParser.containsElementName("stuff1"));
+    REQUIRE(myXMLParser.containsElementName("stuff2"));
+}
+
+
+
+TEST_CASE("Test whitespace", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "<element>  blah blah blah  </element>";
+
+    REQUIRE(myXMLParser.tokenizeInputString(test));
+    REQUIRE(myXMLParser.parseTokenizedInput());
+
+    REQUIRE(myXMLParser.containsElementName("element"));
+}
+
+TEST_CASE("Test empty", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "";
+
+    REQUIRE_FALSE(myXMLParser.tokenizeInputString(test));
+    REQUIRE_FALSE(myXMLParser.parseTokenizedInput());
+}
+
+TEST_CASE("Test really long string", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "<parent>";
+
+    for (int i = 0; i < 10000; ++i) {
+        test += "stuff ";
+    }
+
+    test += "</parent>";
+
+    REQUIRE(myXMLParser.tokenizeInputString(test));
+    REQUIRE(myXMLParser.parseTokenizedInput());
+    REQUIRE(myXMLParser.containsElementName("parent"));
+}
+
+TEST_CASE("Test non alphabet characters", "[XMLParser]") {
+    XMLParser myXMLParser;
+    std::string test = "<st-uff_1>.&@#</st-uff_1>";
+
+    REQUIRE(myXMLParser.tokenizeInputString(test));
+    REQUIRE(myXMLParser.parseTokenizedInput());
+
+    REQUIRE(myXMLParser.containsElementName("st-uff_1"));
 }

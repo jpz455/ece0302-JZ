@@ -265,25 +265,50 @@ TEST_CASE("Tokenize and parse XML string") {
 }
 
 TEST_CASE("nested","[myxmlparser]"){
-	std::string test = "<tag1 <anothertag>>content</tag1>";
+	std::string test1 = " <someTag>Content</someTag> ";
+	std::string test2= "<?xml version =\"1.0\"?><html><head>Content here</ head><body>Content here<empty src=\"f\"/></body></html>";
+	std::string test3= "</tag>reversed<tag>";
+	std::string test4 = "<tag>";
+	std::string test5 = "<tag1 <anothertag>>content</tag1>";
 
 	XMLParser myXMLParser;
 
-	myXMLParser.tokenizeInputString(test);
+	REQUIRE_FALSE(myXMLParser.parseTokenizedInput());
 
-	REQUIRE( !myXMLParser.parseTokenizedInput() );
-	test = "<tag1>content<tag2cross></tag1></tag2cross>";
-	myXMLParser.tokenizeInputString(test);
+	
+	REQUIRE(myXMLParser.tokenizeInputString(test1));
+	REQUIRE(myXMLParser.parseTokenizedInput());
 
-	REQUIRE( !myXMLParser.parseTokenizedInput() );
-	test = "<tag1>content<tag2cross></tag1></tag2cross>";
-	myXMLParser.tokenizeInputString(test);
+	REQUIRE(!myXMLParser.tokenizeInputString(test2));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
 
-	REQUIRE( !myXMLParser.parseTokenizedInput() );
 
-	test = "<tag>content<empty/></tag>";
+	REQUIRE(myXMLParser.tokenizeInputString(test3));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
 
-	myXMLParser.tokenizeInputString(test);
 
-	REQUIRE( myXMLParser.parseTokenizedInput() );
+	REQUIRE(myXMLParser.tokenizeInputString(test4));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+
+
+	REQUIRE(!myXMLParser.tokenizeInputString(test5));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	
+}
+TEST_CASE("frequency test", "[myxmlparser]") {
+    std::string test1 = "<test>stuff</test>";
+	std::string test2 = " <someTag>Content</someTag> ";
+    XMLParser myXML;
+
+	REQUIRE(myXML.tokenizeInputString(test2));
+	REQUIRE(myXML.parseTokenizedInput());
+
+    myXML.clear();
+
+    
+    myXML.tokenizeInputString(test1);
+    myXML.parseTokenizedInput();
+
+    
+    REQUIRE(myXML.frequencyElementName("test") == 1);
 }

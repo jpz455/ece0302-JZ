@@ -17,9 +17,11 @@ XMLParser::XMLParser()
 // TODO: Implement the destructor here
 XMLParser::~XMLParser()
 {   
-    delete elementNameBag;
-    delete parseStack;
-	clear();
+  clear();
+	delete elementNameBag;
+	elementNameBag = nullptr;
+	delete parseStack;
+	parseStack = nullptr;
 }  // end destructor
 //*********HELPER FUNCTIONS TO HELP SECTION OFF CODE***********************//
 
@@ -179,6 +181,7 @@ bool XMLParser::tokenizeInputString(const std::string &inputString) {
             while (index2 < inputString.length() && inputString[index2] != '>') {
                 if (inputString[index2] == '<') {
                     clear();
+                    tokeSuccess=false;
                     return false;
                 }
                 index2++;
@@ -291,7 +294,10 @@ bool XMLParser::parseTokenizedInput() {
 // TODO: Implement the clear method here
 void XMLParser::clear()
 {
-    tokenizedInputVector.clear();
+   elementNameBag->clear();
+	parseStack->clear();
+	tokenizedInputVector.clear();
+   
     
     
    
@@ -305,6 +311,10 @@ vector<TokenStruct> XMLParser::returnTokenizedInput() const
 // TODO: Implement the containsElementName method
 bool XMLParser::containsElementName(const std::string &inputString) const
 {
+    if (!tokeSuccess || !parseSuccess) {
+        throw std::logic_error("Input has not been both tokenized and parsed");
+    }
+
 if(parseSuccess&&tokeSuccess){
 	    for (const auto &token : tokenizedInputVector) {
         if (token.tokenType == START_TAG || token.tokenType == END_TAG || token.tokenType == EMPTY_TAG) {
@@ -318,10 +328,11 @@ if(parseSuccess&&tokeSuccess){
 }
 
 }
-
 // TODO: Implement the frequencyElementName method
 int XMLParser::frequencyElementName(const std::string &inputString) const
 {   
-    if(parseSuccess&&tokeSuccess)
+    if (!tokeSuccess || !parseSuccess) {
+        throw std::logic_error("Input has not been both tokenized and parsed");
+    }
 	return elementNameBag->getFrequencyOf(inputString);
 }

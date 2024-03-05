@@ -5,6 +5,7 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
+#include <memory>
 #include <stdexcept>
 #include "Node.hpp"
 
@@ -14,7 +15,8 @@ template<class ItemType>
 class Stack
 {
 private:
-	Node<ItemType>* headPtr; // Pointer to first node
+	 
+	std::shared_ptr<Node<ItemType>> headPtr; // Pointer to first node
 	int currentSize;         // Current depth of the stack
 
 public:
@@ -48,4 +50,3 @@ public:
 
 #include "Stack.tpp"
 #endif
-

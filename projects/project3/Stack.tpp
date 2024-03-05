@@ -42,8 +42,7 @@ int Stack<ItemType>::size() const
 template<class ItemType>
 bool Stack<ItemType>::push(const ItemType& newItem)
 {
-	Node<ItemType>* newNode = new Node<ItemType>(newItem, headPtr);
-	headPtr = newNode;
+	headPtr = std::make_shared<Node<ItemType>>(newItem,headPtr);
 	currentSize++;
 	return true;
 }  // end push
@@ -65,9 +64,8 @@ bool Stack<ItemType>::pop()
 	if(isEmpty()){
 		return false;
 	}
-	Node<ItemType>* deletePtr = headPtr;
+
 	headPtr = headPtr->getNext();
-	delete deletePtr;
 	currentSize--;
 	return true;
 }  // end pop
@@ -80,4 +78,3 @@ void Stack<ItemType>::clear()
 		pop();
 	}
 }  // end clear
-

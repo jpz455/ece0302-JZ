@@ -6,6 +6,7 @@
 #ifndef BAG_HPP
 #define BAG_HPP
 
+#include <memory>
 #include <vector>
 #include "Node.hpp"
 
@@ -13,13 +14,13 @@ template<class ItemType>
 class Bag
 {
 private:
-	Node<ItemType>* headPtr; // Pointer to first node
+	std::shared_ptr<Node<ItemType>> headPtr; // Pointer to first node
 	int itemCount;           // Current number of items in bag
 
 	/** Private helper function.
 	Returns either a pointer to the node containing a given item,
 	or the null pointer if the item is not in the linked DS */
-	Node<ItemType>* getPointerTo(const ItemType& target) const;
+	std::shared_ptr<Node<ItemType>> getPointerTo(const ItemType& target) const;
 
 public:
 	/** Constructor */

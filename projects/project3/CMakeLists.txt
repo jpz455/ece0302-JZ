@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(P3 CXX)
 
-#require a C++11 compiler for all targets
-set(CMAKE_CXX_STANDARD 11)
+#require a C++14 compiler for all targets
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # some definitions
-set(CODE_TO_SUBMIT Stack.hpp Stack.tpp XMLParser.hpp XMLParser.cpp XMLParser_test.cpp)
+set(CODE_TO_SUBMIT Node.hpp Node.tpp Bag.hpp Bag.tpp Stack.hpp Stack.tpp XMLParser.hpp XMLParser.cpp XMLParser_test.cpp)
 set(SOURCE_STACK_MAIN mainStack.cpp)
 set(SOURCE_XMLPARSER XMLParser.cpp)
 set(SOURCE_XMLPARSER_TEST XMLParser.cpp XMLParser_test.cpp)

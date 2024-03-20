@@ -9,8 +9,8 @@ SortedLinkedList<T>::SortedLinkedList(): LinkedList<T>()
 template <typename T>
 SortedLinkedList<T>::SortedLinkedList(LinkedList<T> unsorted_list) 
 {
-  for (std::size_t i = 0; i < unsorted_list.getLength(); ++i) {
-        insert(unsorted_list.getEntry(i));
+  for (int i = 0; i < unsorted_list.getLength(); ++i) {
+        insert(unsorted_list.getEntry(i)); //sorting
     }
 }
 
@@ -50,16 +50,16 @@ void SortedLinkedList<T>::insert(const T& item)
 {
    std::size_t index = 0;
     if (isEmpty()) {
-        LinkedList<T>::insert(index, item); 
+        LinkedList<T>::insert(index, item); //empty list means insert as first item
         return;
     }
 
     while (index < getLength() && item > getEntry(index)) {
-        index++;
+        index++; ///traverse list
     }
 
     if (index > getLength()) {
-        throw std::range_error("Position argument out of range in SortedLinkedList::insert.");
+        throw std::range_error("out of range"); //cannot insert something that it outside of the length
     }
 
     LinkedList<T>::insert(index, item);
@@ -68,10 +68,12 @@ void SortedLinkedList<T>::insert(const T& item)
 template <typename T>
 void SortedLinkedList<T>::remove(const T& item)
 {
-  if(isEmpty()) throw std::range_error("empty list in remove");
+  if(isEmpty()) {
+  throw std::range_error("cannot remove from empty list");
+  }
   std::size_t index = 0;
   while(index < getLength()){
-    if (getEntry(index) == item){
+    if (getEntry(index) == item){ //find index of item to be removed
       break;
     }
     else{
@@ -85,10 +87,10 @@ template <typename T>
 void SortedLinkedList<T>::removeAt(std::size_t position)
 {
  if (isEmpty()) {
-        throw std::range_error("Cannot remove from an empty list.");
+        throw std::range_error("Cannot remove from an empty list");
     }
     if (position >= getLength() || position < 0) {
-        throw std::range_error("Invalid position for removal.");
+        throw std::range_error("Invalid position");
     }
     LinkedList<T>::remove(position);
 }

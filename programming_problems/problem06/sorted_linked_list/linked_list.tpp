@@ -56,7 +56,7 @@ template <typename T>
 void LinkedList<T>::insert(std::size_t position, const T& item)
 {
   if (position > listSize||position < 0) {
-        throw std::range_error("Insertion position out of range");
+        throw std::range_error("out of range");
     }
     if (position == 0) {
         headptr = new Node<T>(item, headptr);
@@ -74,7 +74,7 @@ template <typename T>
 void LinkedList<T>::remove(std::size_t position)
 {
    if (position >= listSize || isEmpty()) {
-        throw std::range_error("Invalid position for removal or empty list");
+        throw std::range_error("Invalid");
     }
     Node<T>* temp = nullptr;
     if (position == 0) {
@@ -103,8 +103,8 @@ void LinkedList<T>::clear()
 template <typename T>
 T LinkedList<T>::getEntry(std::size_t position) const
 {
-   if (position >= listSize || position < 0) {  // Check for out-of-range position
-        throw std::range_error("Invalid position for retrieval");
+   if (position >= listSize || position < 0) { 
+        throw std::range_error("Invalid position");
     }
     Node<T>* current = headptr; //temporary node pointer to head pointer
     for (std::size_t i = 0; i < position; ++i) {
@@ -116,8 +116,8 @@ T LinkedList<T>::getEntry(std::size_t position) const
 template <typename T>
 void LinkedList<T>::setEntry(std::size_t position, const T& newValue)
 {
-  if (position >= listSize || position < 0) {  // Check for out-of-range position
-        throw std::range_error("Invalid position for setting value");
+  if (position >= listSize || position < 0) { 
+        throw std::range_error("Invalid position");
     }
    if (position < listSize) { //can only set entry for position within the list size
         Node<T>* current = headptr; //temporary pointer to find the entry

@@ -380,3 +380,23 @@ TEST_CASE("Test non alphabet characters", "[XMLParser]") {
 
     REQUIRE(myXMLParser.containsElementName("st-uff_1"));
 }
+
+TEST_CASE("test return tokenized input","[XMLParser]"){
+	XMLParser myXMLParser;
+
+	std::string test = "<start>content</start>";
+
+	myXMLParser.tokenizeInputString(test);
+	myXMLParser.parseTokenizedInput();
+
+	vector<TokenStruct> returnInput = myXMLParser.returnTokenizedInput();
+
+	std::vector<TokenStruct> result = {TokenStruct{StringTokenType::START_TAG, std::string("start")},
+											TokenStruct{StringTokenType::CONTENT, std::string("content")},
+											TokenStruct{StringTokenType::END_TAG, std::string("start")}};
+	
+	REQUIRE(result.size() == returnInput.size());
+	REQUIRE(returnInput[0].tokenString.compare(result[0].tokenString) == 0);
+	REQUIRE(returnInput[1].tokenString.compare(result[1].tokenString) == 0);
+	REQUIRE(returnInput[2].tokenString.compare(result[2].tokenString) == 0);
+}

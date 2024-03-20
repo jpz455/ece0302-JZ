@@ -47,7 +47,8 @@ public:
 
 private:
 
-  //TODO
+  Node<T> *headptr; //points to head node
+  size_t listSize; //keep track of list size
   
 };
 

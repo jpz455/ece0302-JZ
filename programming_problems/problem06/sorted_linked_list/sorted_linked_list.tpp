@@ -9,7 +9,9 @@ SortedLinkedList<T>::SortedLinkedList(): LinkedList<T>()
 template <typename T>
 SortedLinkedList<T>::SortedLinkedList(LinkedList<T> unsorted_list) 
 {
-  // TODO
+  for (std::size_t i = 0; i < unsorted_list.getLength(); ++i) {
+        insert(unsorted_list.getEntry(i));
+    }
 }
 
 template <typename T>
@@ -46,23 +48,49 @@ std::size_t SortedLinkedList<T>::getLength() const noexcept
 template <typename T>
 void SortedLinkedList<T>::insert(const T& item)
 {
-  // TODO
+   std::size_t index = 0;
+    if (isEmpty()) {
+        LinkedList<T>::insert(index, item); 
+        return;
+    }
+
+    while (index < getLength() && item > getEntry(index)) {
+        index++;
+    }
+
+    if (index > getLength()) {
+        throw std::range_error("Position argument out of range in SortedLinkedList::insert.");
+    }
+
+    LinkedList<T>::insert(index, item);
 }
 
 template <typename T>
 void SortedLinkedList<T>::remove(const T& item)
 {
   if(isEmpty()) throw std::range_error("empty list in remove");
-  
-  // TODO
+  std::size_t index = 0;
+  while(index < getLength()){
+    if (getEntry(index) == item){
+      break;
+    }
+    else{
+      index++;
+    }
+  } 
+  LinkedList<T>::remove(index + 1);
 }
 
 template <typename T>
 void SortedLinkedList<T>::removeAt(std::size_t position)
 {
-  if(isEmpty()) throw std::range_error("empty list in remove");
-  
-  // TODO
+ if (isEmpty()) {
+        throw std::range_error("Cannot remove from an empty list.");
+    }
+    if (position >= getLength() || position < 0) {
+        throw std::range_error("Invalid position for removal.");
+    }
+    LinkedList<T>::remove(position);
 }
 
 template <typename T>
@@ -74,12 +102,21 @@ void SortedLinkedList<T>::clear()
 template <typename T>
 T SortedLinkedList<T>::getEntry(std::size_t position) const
 {
+ if(isEmpty() || position < 0 || position >= getLength()) {
+    throw std::range_error("invalid");
+  }
   return LinkedList<T>::getEntry(position);
 }
 
 template <typename T>
 long int SortedLinkedList<T>::getPosition(const T& item)
 {
-  // TODO
-  return 0;
+   long int index = 0;
+    while (index < getLength() && item > getEntry(index)) {
+        index++;
+    }
+    if (index < getLength() && getEntry(index) == item) {
+        return index;
+    }
+    return -1;
 }

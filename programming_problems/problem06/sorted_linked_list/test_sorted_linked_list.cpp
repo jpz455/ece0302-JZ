@@ -259,3 +259,31 @@ TEST_CASE("Testing exceptions", "[sorted linked list]") {
   CHECK_THROWS_AS(lst.removeAt(-1), std::range_error);
   CHECK_THROWS_AS(lst.getEntry(-1), std::range_error);
 }
+
+TEST_CASE("Test Constructor","[sorted linked list]"){
+   ListType lst1;
+    
+    REQUIRE(lst1.isEmpty());
+    
+    lst1.insert(3);
+    lst1.insert(2);
+    lst1.insert(1);
+    ListType lst2(lst1);
+    
+    REQUIRE(lst2.getEntry(0) == 1);
+    REQUIRE(lst2.getEntry(1) == 2);
+    REQUIRE(lst2.getEntry(2) == 3);
+}
+TEST_CASE("Test Copy Assignment","[sorted linked list]"){
+    ListType lst1;
+    lst1.insert('a');
+    lst1.insert('b');
+    lst1.insert('c');
+    ListType lst2;
+    lst2 = lst1;
+    
+    REQUIRE(lst1.getLength() == lst2.getLength());
+    for (int i = 0; i < lst1.getLength(); i++) {
+        REQUIRE(lst1.getEntry(i) == lst2.getEntry(i));
+    }
+}

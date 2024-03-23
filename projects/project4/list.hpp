@@ -46,7 +46,7 @@ public:
 
 private:
 
-  //TODO
+  std::vector<T> elements;
   
 };
 

@@ -15,63 +15,79 @@ List<T>::~List()
 template <typename T>
 List<T>::List(const List<T>& x)
 {
-  //TODO
+  elements = x.elements;
 }
 
 template <typename T>
 List<T>& List<T>::operator=(List<T> x)
 {
-  //TODO
-  return *this;
+  swap(x); 
+    return *this;
 }
 
 template <typename T>
 void List<T>::swap(List<T>& x) 
 {
-  //TODO
+  elements.swap(x.elements);
 }
 
 template <typename T>
 bool List<T>::isEmpty() const noexcept
 {
-  //TODO
-  return true;
+  return elements.empty(); 
 }
 
 template <typename T>
 std::size_t List<T>::getLength() const noexcept
 {
-  //TODO
-  return 0;
+  return elements.size();
 }
 
 template <typename T>
 void List<T>::insert(std::size_t position, const T& item)
 {
-  //TODO
+  if (position <= elements.size()) {
+        elements.insert(elements.begin() + position, item);
+    } else {
+        throw std::out_of_range("Position out of range");
+    }
 }
 
 template <typename T>
 void List<T>::remove(std::size_t position)
 {
-  //TODO
+  if (position < elements.size()) {
+        elements.erase(elements.begin() + position);
+    } else {
+        // Handle out-of-range position
+        throw std::out_of_range("Position out of range");
+    }
 }
 
 template <typename T>
 void List<T>::clear()
 {
-  //TODO
+  elements.clear();
 }
 
 template <typename T>
 T List<T>::getEntry(std::size_t position) const
 {
-  //TODO
-  return T();
+  if (position < elements.size()) {
+        return elements[position];
+    } else {
+        // Handle out-of-range position
+        throw std::out_of_range("Position out of range");
+    }
 }
 
 template <typename T>
 void List<T>::setEntry(std::size_t position, const T& newValue)
 {
-  //TODO
+   if (position < elements.size()) {
+        elements[position] = newValue;
+    } else {
+        // Handle out-of-range position
+        throw std::out_of_range("Position out of range");
+    }
 }

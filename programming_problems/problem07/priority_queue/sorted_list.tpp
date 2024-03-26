@@ -40,13 +40,44 @@ std::size_t SortedList<T, L>::getLength() const noexcept
 template <typename T, typename L>
 void SortedList<T, L>::insert(const T& item)
 {
-  // TODO
+  //if list is empty insert at first position
+  if (isEmpty()) {
+    plist.insert(0, item);
+  } 
+  else {
+    //find index to insert
+    int i = 0;
+    while (i < getLength() && item > getEntry(i)) {
+      i++;
+    }
+    //insert item at traversed index
+    plist.insert(i, item);
+  }
 }
 
 template <typename T, typename L>
 void SortedList<T, L>::remove(const T& item)
 {
-  // TODO
+  //cannot remove something from an empty list
+  if(isEmpty()) 
+  throw std::range_error("cannot remove from an empty list");
+
+  bool occur = 0;
+  int index = -1;
+  //find item to be removed and index it occurs at if it is present in the list
+  for (int i = 0; i < getLength()-1; i++) {
+    if (getEntry(i) == item) {
+      index = i;
+      occur = true;
+    }
+  }
+  //cannot remove item that is not within original list
+  if (occur == false) {
+    throw std::range_error("is not in list");
+  } 
+  else {
+    plist.remove(index);
+  }
 }
 
 template <typename T, typename L>
@@ -70,6 +101,17 @@ T SortedList<T, L>::getEntry(std::size_t position) const
 template <typename T, typename L>
 long int SortedList<T, L>::getPosition(const T& newValue)
 {
-  // TODO
-  return 0;
+  //cannot have an index of an empty list
+  if (isEmpty()) {
+    return -1;
+  }
+
+  int index = -1;
+  for (int i = 0; i < getLength(); i++) {
+    if (getEntry(i) == newValue) {
+      index = i;
+      return index;
+    }
+  }
+  return index;
 }

@@ -2,6 +2,7 @@
 #define _LIST_HPP_
 
 #include "abstract_list.hpp"
+#include "Node.hpp"
 
 template <typename T>
 class List: public AbstractList<T>
@@ -46,7 +47,9 @@ public:
 
 private:
 
-  //TODO
+    Node<T> *headptr; //points to head node
+    size_t listSize; //keep track of list size
+  
   
 };
 

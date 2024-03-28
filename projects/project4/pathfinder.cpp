@@ -79,7 +79,7 @@ bool breadthFirstSearch(Image<Pixel>& image, currentPosition& startP) {
             int adjX = adjacent[i].x;
             int adjY = adjacent[i].y;
 
-            if (adjX >= 0 && adjX < width && adjY >= 0 && adjY < height && image(adjY, adjX) == WHITE && !=explored[adjY][adjX]) {
+            if (adjX >= 0 && adjX < width && adjY >= 0 && adjY < height && image(adjY, adjX) == WHITE && !explored[adjY][adjX]) {
                 frontier.enqueue(adjacent[i]);
                 explored[adjY][adjX] = true;
             }

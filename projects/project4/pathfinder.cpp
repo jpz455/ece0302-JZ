@@ -5,99 +5,88 @@
 #include "queue.hpp"
 
 
+//holding the position throughout the maze
 struct currentPosition {
   int x;
   int y;
 };
 
 
+//finding the starting position (red pizel) within the maze
 currentPosition findStart(Image<Pixel>& image) {
   currentPosition startP;
+  //initialize as invalid
   startP.x = -1;
   startP.y = -1;
-  int startNum = 0;
+  //hold number of red pixels (will be invalid if more than 1)
+  int redP = 0;
 
   for (int row = 0; row < image.height(); row++) {
     for (int col = 0; col < image.width(); col++) {
       if (image(row, col) == RED) {
+        //assign start position and increment number of red pixels
         startP.x = col;
         startP.y = row;
-        startNum++;
+        redP++;
       }
-      if (startNum > 1 || (image(row, col) != BLACK && image(row, col) != WHITE && image(row, col) != RED)) {
+      //find maze errors of more than one red pixel or invalid colors
+      if (redP > 1 || (image(row, col) != BLACK && image(row, col) != WHITE && image(row, col) != RED)) {
         return currentPosition{-1, -1}; 
       }
     }
   }
-  if (startNum == 0) {
+  //no start position found error
+  if (redP == 0) {
     return currentPosition{-1, -1};
   }
-
   return startP;
 }
 
 
 bool breadthFirstSearch(Image<Pixel>& image, currentPosition& startP) {
-  int height = image.height();
-  int width = image.width();
+    int height = image.height();
+    int width = image.width();
 
-  Queue<currentPosition, List<currentPosition>> frontier;
-  bool traversed[height][width];
-  bool frontiered[height][width];
-  for (int m = 0; m < height; m++) {
-    for (int n = 0; n < width; n++) {
-      traversed[m][n] = false;
-      frontiered[m][n] = false;
-    }
-  }
+    // Queue to hold all the unexplored states
+    Queue<currentPosition, List<currentPosition>> frontier;
 
-  frontier.enqueue(startP);
-  frontiered[startP.y][startP.x] = true;
+    // Explored array to keep track of explored states and not allow duplicates
+    bool explored[height][width] = {false};
 
-  while (!frontier.isEmpty()) {
-    currentPosition curNode = frontier.peekFront();
-    frontier.dequeue();
-    frontiered[curNode.y][curNode.x] = false;
+    // Add the start position to the queue and mark as visited
+    frontier.enqueue(startP);
+    explored[startP.y][startP.x] = true;
 
-    if ((curNode.x == 0) || (curNode.x == image.width() - 1) || (curNode.y == 0) || (curNode.y == image.height() - 1)) {
-      image(curNode.y, curNode.x) = GREEN;
-      return true; 
-    }
+    while (!frontier.isEmpty()) {
+        currentPosition curNode = frontier.peekFront();
+        frontier.dequeue();
 
-    currentPosition up, right, down, left;
-    up.x = curNode.x;
-    up.y = curNode.y - 1;
-    down.x = curNode.x;
-    down.y = curNode.y + 1;
-    left.x = curNode.x - 1;
-    left.y = curNode.y;
-    right.x = curNode.x + 1;
-    right.y = curNode.y;
+        if ((curNode.x == 0) || (curNode.x == width - 1) || (curNode.y == 0) || (curNode.y == height - 1)) {
+            image(curNode.y, curNode.x) = GREEN;
+            return true;
+        }
 
-    if ((image(up.y, up.x) == WHITE) && !traversed[up.y][up.x] && !frontiered[up.y][up.x]) {
-      frontier.enqueue(up);
-      frontiered[up.y][up.x] = true;
-    }
+        // Define adjacent positions
+        currentPosition adjacent[4] = {
+            {curNode.x, curNode.y - 1}, // Up
+            {curNode.x + 1, curNode.y}, // Right
+            {curNode.x, curNode.y + 1}, // Down
+            {curNode.x - 1, curNode.y}  // Left
+        };
 
-    if (image(down.y, down.x) == WHITE && !traversed[down.y][down.x] && !frontiered[down.y][down.x]) {
-      frontier.enqueue(down);
-      frontiered[down.y][down.x] = true;
+        // Explore adjacent positions
+         for (int i = 0; i < 4; ++i) {
+            int adjX = adjacent[i].x;
+            int adjY = adjacent[i].y;
+
+            if (adjX >= 0 && adjX < width && adjY >= 0 && adjY < height && image(adjY, adjX) == WHITE && !=explored[adjY][adjX]) {
+                frontier.enqueue(adjacent[i]);
+                explored[adjY][adjX] = true;
+            }
+        }
     }
 
-    if (image(left.y, left.x) == WHITE && !traversed[left.y][left.x] && !frontiered[left.y][left.x]) {
-      frontier.enqueue(left);
-      frontiered[left.y][left.x] = true;
-    }
-
-    if (image(right.y, right.x) == WHITE && !traversed[right.y][right.x] && !frontiered[right.y][right.x]) {
-      frontier.enqueue(right);
-      frontiered[right.y][right.x] = true;
-    }
-
-    traversed[curNode.y][curNode.x] = true;
-  }
-
-  return false; 
+    return false;
 }
 
 int main(int argc, char *argv[]) {

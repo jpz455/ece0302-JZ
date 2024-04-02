@@ -83,9 +83,9 @@ bool breadthFirstSearch(Image<Pixel>& image, currentPosition& startP) {
        // Define adjacent positions
         currentPosition adjacent[4] = {
             {curNode.x, curNode.y - 1}, // previous row
-            {curNode.x + 1, curNode.y}, // next row
-            {curNode.x, curNode.y + 1}, // previous column
-            {curNode.x - 1, curNode.y}  // next column
+            {curNode.x , curNode.y+1}, // next row
+            {curNode.x-1, curNode.y}, // previous column
+            {curNode.x +1, curNode.y}  // next column
             
         };
 

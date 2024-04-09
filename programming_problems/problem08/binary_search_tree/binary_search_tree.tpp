@@ -95,8 +95,36 @@ template <typename KeyType, typename ItemType>
 bool BinarySearchTree<KeyType, ItemType>::insert(
     const KeyType& key, const ItemType& item)
 {
-    // TODO 
-    return false;
+    
+     if (isEmpty()) {
+        root = new Node<KeyType, ItemType>;
+        root->key = key;
+        root->data = item;
+        return true;
+    }
+
+    Node<KeyType, ItemType>* curr;          
+    Node<KeyType, ItemType>* curr_parent;   
+    search(key, curr, curr_parent);         
+
+    if (curr->key == key) { 
+        curr=nullptr;
+        curr_parent=nullptr;             
+        return false;                     
+
+    } else {                               
+        Node<KeyType, ItemType>* newNode = new Node<KeyType, ItemType>;
+        newNode->key = key;                
+        newNode->data = item;              
+
+        if (key < curr->key) {             
+            curr->left = newNode;           
+        } else {                          
+            curr->right = newNode;          
+        }
+    }
+
+    return true;
 }
 
 template <typename KeyType, typename ItemType>
@@ -126,31 +154,115 @@ bool BinarySearchTree<KeyType, ItemType>::retrieve(
 
 template <typename KeyType, typename ItemType>
 bool BinarySearchTree<KeyType, ItemType>::remove(KeyType key)
-{
-    if (isEmpty())
-        return false; // empty tree
+{   
+     if (isEmpty())
+        return false;
+
 
     // TODO
+    Node<KeyType, ItemType>* curr;              
+    Node<KeyType, ItemType>* curr_parent;      
+    search(key, curr, curr_parent);            
 
+   
+    if (root->left == 0 && root->right == 0) {
+        delete root;
+        root = 0;
+        return true;
+    }
 
-    // case one thing in the tree
+    
+    if (curr->left == 0 && curr->right == 0) {
+        
+        if (curr_parent->right == curr) {      
+            curr_parent->right = 0;            
+        } else {                                
+            curr_parent->left = 0;             
+        }
+        delete curr;                            
+        return true;
+    }
 
-    // case, found deleted item at leaf
+   
+    if (curr->left == 0 && curr->right != 0) {
+        
+        if (curr_parent == 0) {                
+            root = curr->right;
+            delete curr;
+            return true;
+        }
+        
+        if (curr_parent->left == curr) {      
+            curr_parent->left = curr->right;   
+        } else {                               
+            curr_parent->right = curr->right;  
+        }
 
-    // case, item to delete has only a right child
+        delete curr;                          
+        return true;
+    }
 
-    // case, item to delete has only a left child
+    
+    if (curr->left != 0 && curr->right == 0) {
 
-    // case, item to delete has two children
+        if (curr_parent == 0) {                
+            root = curr->left;
+            delete curr;
+            return true;
+        }
 
-    return false; 
+        if (curr_parent->left == curr) {       
+            curr_parent->left = curr->left;    
+        } else {                              
+            curr_parent->right = curr->left;   
+        }
+
+        delete curr;                         
+        return true;
+    }
+
+    
+    if (curr->left != 0 && curr->right != 0) {
+
+        if (curr_parent == 0) {                
+            root = curr->left;
+            curr_parent = root;
+        } else if (curr_parent->left == curr) {
+            curr_parent->left = curr->left;    
+        } else {                              
+            curr_parent->right = curr->left;   
+        }
+
+       
+        Node<KeyType, ItemType>* leftSubtree = curr->left;        
+        Node<KeyType, ItemType>* rightSubtree = curr->right;      
+        Node<KeyType, ItemType>* leftSubtreeParent = curr_parent; 
+        search(rightSubtree->key, leftSubtree, leftSubtreeParent); 
+
+        if (rightSubtree->key < leftSubtree->key) {              
+            leftSubtree->left = rightSubtree;                    
+        } else {                                                 
+            leftSubtree->right = rightSubtree;                    
+        }
+
+        delete curr;                         
+        return true;
+    }
+
+    return false;                  
+
+   
 }
 
 template <typename KeyType, typename ItemType>
 void BinarySearchTree<KeyType, ItemType>::inorder(Node<KeyType, ItemType>* curr,
     Node<KeyType, ItemType>*& in, Node<KeyType, ItemType>*& parent)
 {
-    // TODO: find inorder successor of "curr" and assign to "in"
+   
+  curr = curr -> right;
+while(curr -> left != 0){
+    in = curr -> left;
+}
 
 }
 

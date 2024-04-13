@@ -113,3 +113,85 @@ TEST_CASE("Thorough replaceif test", "[frontier_queue]")
     REQUIRE(state.getFCost() == 3);
     REQUIRE(state.getPathCost() == 1);
 }
+
+//************************************************//
+TEST_CASE("Popping from an empty queue", "[frontier_queue]") {
+    
+    frontier_queue<int> fq;
+    REQUIRE(fq.empty());
+    REQUIRE_THROWS_AS(fq.pop(), std::logic_error);
+}
+
+TEST_CASE("Pushing on empty queue", "[frontier_queue]") {
+    frontier_queue<int> fq;
+    REQUIRE(fq.empty());
+
+    fq.push(30, 0, 10);
+
+    REQUIRE_FALSE(fq.empty());
+    REQUIRE(fq.contains(30));
+}
+
+TEST_CASE("testing push method with multiple pushes", "[frontier_queue]") {
+    frontier_queue<int> fq;
+    REQUIRE(fq.empty());
+
+   
+    fq.push(10, 1, 10);
+    fq.push(25, 2, 25);
+    fq.push(37, 3, 37);
+
+    REQUIRE_FALSE(fq.empty());
+    REQUIRE(fq.contains(10));
+    REQUIRE(fq.contains(25));
+    REQUIRE(fq.contains(37));
+}
+
+TEST_CASE("test replaceif", "[frontier_queue]") {
+    frontier_queue<int> fq;
+    fq.push(100, 100, 100); // initial cost = 100
+
+    
+    fq.replaceif(100, 1); //replace cost with 1 which is lower than initial cost
+
+    State<int> state = fq.pop();
+    REQUIRE(state.getValue() == 100);
+    REQUIRE(state.getPathCost() == 1);
+}
+
+TEST_CASE("replacing cost for non exisistent element", "[frontier_queue]") {
+    frontier_queue<int> fq;
+    fq.push(20, 150, 150); // initial cost = 150
+
+    // Replace the path cost element not within queue
+    fq.replaceif(2, 5);
+
+    //already established item will not change its characteristics
+    State<int> state = fq.pop();
+    REQUIRE(state.getValue() == 20);
+    REQUIRE(state.getPathCost() == 150);
+}
+
+TEST_CASE("verify minheap format post  .push()", "[frontier_queue]") {
+
+    frontier_queue<int> fq;
+    fq.push(50, 100, 100); 
+    fq.push(100, 50, 50); 
+
+    REQUIRE(fq.contains(50));
+    REQUIRE(fq.contains(100));
+    REQUIRE(fq.pop().getValue() == 50); 
+
+    fq.push(30, 10, 10);
+    REQUIRE(fq.pop().getValue() == 100);
+}
+
+TEST_CASE("verify minheap format after altering costs", "[frontier_queue]") {
+   
+    frontier_queue<int> fq;
+    fq.push(57, 100, 101); 
+    fq.push(100, 54, 53); 
+
+    fq.replaceif(100, 1);
+    REQUIRE(fq.pop().getValue() == 57);
+}

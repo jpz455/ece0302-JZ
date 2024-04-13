@@ -15,37 +15,37 @@ State<T> frontier_queue<T>::pop() {
     queue.pop_back();
     return popThis;
   }
-  // Store the root element to be popped
+  
+  //otherwise store element that will be popped
     State<T> popThis = queue[0];
 
-    // Replace the root element with the last element
+    //overwrite root element with last element of the queue
     queue[0] = queue.back();
     queue.pop_back();
 
-    // Restore the heap property by heapifying down from the root
-    std::size_t current_index = 0;
+    //now restore format by heapify down
+    int idx = 0;
     while (true) {
-        std::size_t left_child = 2 * current_index + 1;
-        std::size_t right_child = 2 * current_index + 2;
-        std::size_t smallest = current_index;
+        int leftC = 2 * idx + 1;
+        int rightC = 2 * idx + 2;
+        int small = idx;
 
-        // Find the smallest element among the root, left child, and right child
-        if (left_child < queue.size() && queue[left_child].getFCost() < queue[smallest].getFCost()) {
-            smallest = left_child;
+        //finding the least value amoung root, right, and left children
+        if (leftC < queue.size() && queue[leftC].getFCost() < queue[small].getFCost()) {
+            small = leftC;
         }
-        if (right_child < queue.size() && queue[right_child].getFCost() < queue[smallest].getFCost()) {
-            smallest = right_child;
+        if (rightC < queue.size() && queue[rightC].getFCost() < queue[small].getFCost()) {
+            small = rightC;
         }
 
-        if (smallest != current_index) {
-            std::swap(queue[current_index], queue[smallest]); // Swap the root with the smallest child
-            current_index = smallest; // Move to the smallest child
+        if (small != idx) {
+            std::swap(queue[idx], queue[small]); //swapping if new index is smaller
+            idx = small; //reassign index to smallest node
         } else {
-            break; // If the root is smaller than or equal to the smallest child, heap property is restored
+            break; //will break once heapify format is reached
         }
     }
-
-    return popThis; // Return the popped element
+    return popThis; 
 }
 
 template <typename T>
@@ -62,11 +62,10 @@ void frontier_queue<T>::push(const T &p, std::size_t cost, std::size_t heur) {
   //if queue is not empty we add it onto the end
   queue.push_back(temp);
   int tempSize = queue.size() - 1;
-  int tempParent = (tempSize - 1) /2;
+  int tempParent = (tempSize - 1) /2; //calculating index
 
   //need to make sure it stays in minheap format (swap spots if less than parent)
   while(tempParent!=0 && queue[tempParent].getFCost() > queue[tempSize].getFCost()){
-  
       std::swap(queue[tempParent], queue[tempSize]); // Swap the elements if criterion met
       tempSize = tempParent; //update the position
       tempParent = (tempParent-1)/2; //this while loop will continue for as long as the the queue is not in minheap format

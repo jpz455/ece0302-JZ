@@ -1,6 +1,10 @@
 
 #ifndef _DATABASE_H_
 #define _DATABASE_H_
+#include "list.hpp"
+#include "binary_search_tree.hpp"
+#include <vector>
+
 
 template <typename T>
 class Database
@@ -31,7 +35,11 @@ public:
 
 private:
 
-  // TODO:
+  //initializing the two different binary trees, keys, creating a list of items, and a size variable
+  BinarySearchTree<std::string,int> tree1, tree2; 
+  std::vector<std::string> KEY1,KEY2;
+  List<T> items;
+  int dataSize;
 
 };
 

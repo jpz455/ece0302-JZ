@@ -95,7 +95,47 @@ template <typename KeyType, typename ItemType>
 bool BinarySearchTree<KeyType, ItemType>::insert(
     const KeyType& key, const ItemType& item)
 {
-    // TODO 
+    //check that tree is empty and make a root node if so
+     if (isEmpty()) {
+
+        root = new Node<KeyType, ItemType>;
+        root->key = key;
+        root->data = item;
+        return true;
+
+    }
+    //otherwise we have to search for the spot to insert the new item
+    else{
+
+    Node<KeyType, ItemType>* node1;          
+    Node<KeyType, ItemType>* node2;   
+    search(key, node1, node2);   //using the search method   
+
+    //this will return if the node already exists within the tree therefore it will not add the new one
+    if (node1->key == key) { 
+        node1=nullptr;
+        node2=nullptr; //have to deallocate the memory to avoid leaks            
+        return false;                     
+
+    } 
+    //if the tree isnt empty, doesnt already contain the item, we have to perform the insertion at the right spot
+    else { 
+        //create a node to add the item to the tree and provide the given information                         
+        Node<KeyType, ItemType>* tempNode = new Node<KeyType, ItemType>;
+        
+        tempNode->key = key;                
+        tempNode->data = item;              
+
+        //perform insertion
+        if (key < node1->key) {             
+            node1->left = tempNode;           
+        } else {                          
+            node1->right = tempNode;          
+        }
+        }
+
+    return true; //success!
+    }
     return false;
 }
 
@@ -130,27 +170,85 @@ bool BinarySearchTree<KeyType, ItemType>::remove(KeyType key)
     if (isEmpty())
         return false; // empty tree
 
-    // TODO
+    //otherwise search for where the removal will take place
+    Node<KeyType, ItemType>* curr;
+    Node<KeyType, ItemType>* parent;
+    search(key, curr, parent);
+
+    //key was not found therefore cannot remove the key
+    if (curr == nullptr)  
+        return false;
 
 
-    // case one thing in the tree
+    // Case 1: Node has no children
+    if (curr->left == nullptr && curr->right == nullptr) {
+        if (parent == nullptr) {//remove a root
+            delete root;
+            root = nullptr;
+        } else if (parent->left == curr) {//remove left child of parent
+            delete parent->left;
+            parent->left = nullptr;
+        } else {
+            delete parent->right;//remove right child of parent
+            parent->right = nullptr;
+        }
+        return true;
+    }
 
-    // case, found deleted item at leaf
+    // Case 2: Node has one child have to check left and right children
+    if (curr->left == nullptr || curr->right == nullptr) {
+        Node<KeyType, ItemType>* child = nullptr;
+        if (curr->left != nullptr) { //determining which child exists
+          child = curr->left;
+        } else {
+          child = curr->right;
+        }
+        if (parent == nullptr) { //node to remove is root 
+            root = child;
+        } else if (parent->left == curr) {//node to remove is left child
+            parent->left = child;
+        } else {
+            parent->right = child; //node to remove is right child
+        }
+        delete curr; //deallocate
+        return true;
+    }
 
-    // case, item to delete has only a right child
+    // Case 3: Node has two children
+    Node<KeyType, ItemType>* successorParent = curr;
+    Node<KeyType, ItemType>* successor = curr->right; //initialize as right child
+    inorder(successor, successor, successorParent);  // find inorder successor
 
-    // case, item to delete has only a left child
+    // copying data for current node
+    curr->key = successor->key;
+    curr->data = successor->data;
 
-    // case, item to delete has two children
+    // Remove the successor node from position 
+    if (successorParent->left == successor) {
+        successorParent->left = successor->right; //successor right subtree added to parent
+    } else {
+        successorParent->right = successor->right; //successor left subtree added to parent
+    }
+    delete successor; //deallocate
+    return true;
 
-    return false; // default should never get here
+
+
 }
 
 template <typename KeyType, typename ItemType>
 void BinarySearchTree<KeyType, ItemType>::inorder(Node<KeyType, ItemType>* curr,
     Node<KeyType, ItemType>*& in, Node<KeyType, ItemType>*& parent)
 {
-    // TODO: find inorder successor of "curr" and assign to "in"
+   //find leftmost node
+    while (curr->left != nullptr) {
+        //assign to parent
+        parent = curr;
+        //move to left child
+        curr = curr->left;
+    }
+    //inorder successor will now point to the leftmost node
+    in = curr;
 
 }
 

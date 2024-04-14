@@ -96,11 +96,9 @@ void frontier_queue<T>::replaceif(const T &p, std::size_t cost) {
 
   //traverse the entire queue
   for (int i = 0; i < queue.size(); ++i) {
-        // Check if the value matches and the current path cost is greater than the provided cost
+        //update the cost of the path if p value is the same and the cost is greater
         if (queue[i].getValue() == p && queue[i].getPathCost() > cost) {
-            // Update the path cost
             queue[i].updatePathCost(cost);
-            // Exit the function after updating the first occurrence
             return;
         }
     }

@@ -114,7 +114,7 @@ TEST_CASE("Thorough replaceif test", "[frontier_queue]")
     REQUIRE(state.getPathCost() == 1);
 }
 
-//************************************************//
+//*******************added tests*****************************//
 TEST_CASE("Popping from an empty queue", "[frontier_queue]") {
     
     frontier_queue<int> fq;
@@ -149,10 +149,10 @@ TEST_CASE("testing push method with multiple pushes", "[frontier_queue]") {
 
 TEST_CASE("test replaceif", "[frontier_queue]") {
     frontier_queue<int> fq;
-    fq.push(100, 100, 100); // initial cost = 100
+    fq.push(100, 100, 100); 
 
     
-    fq.replaceif(100, 1); //replace cost with 1 which is lower than initial cost
+    fq.replaceif(100, 1); 
 
     State<int> state = fq.pop();
     REQUIRE(state.getValue() == 100);
@@ -161,12 +161,12 @@ TEST_CASE("test replaceif", "[frontier_queue]") {
 
 TEST_CASE("replacing cost for non exisistent element", "[frontier_queue]") {
     frontier_queue<int> fq;
-    fq.push(20, 150, 150); // initial cost = 150
+    fq.push(20, 150, 150); 
 
-    // Replace the path cost element not within queue
+   
     fq.replaceif(2, 5);
 
-    //already established item will not change its characteristics
+   
     State<int> state = fq.pop();
     REQUIRE(state.getValue() == 20);
     REQUIRE(state.getPathCost() == 150);

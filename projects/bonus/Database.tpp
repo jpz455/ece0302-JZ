@@ -30,7 +30,7 @@ bool Database<T>::add(std::string key1, std::string key2, const T& item) {
     // Add item to the overal items list at the correct index
     items.insert(dataSize,item);
 
-    // Update size
+    //increment size
     ++dataSize;
 
     return true;
@@ -40,30 +40,27 @@ template <typename T>
 bool Database<T>::remove(std::string key) {
   
    if (isEmpty()) {
-        return false; // Database is empty
+        return false; //cannot remove from an empty database
     }
 
-    bool removed = false; // Flag to track if an entry was removed
+    bool removed = false; //initialize boolean to indicate removal has not occured
 
-    // Iterate over both KEY1 and KEY2 simultaneously
+    //traverse key 1 and key 2 to check if either have key wanting to be removed
     for (int i = 0; i < dataSize; ++i) {
         if (KEY1[i] == key || KEY2[i] == key) {
-            // Found a match, remove corresponding elements
+            //remove item if the key matches any value in KEY1 or KEY2
             KEY1.erase(KEY1.begin() + i);
             KEY2.erase(KEY2.begin() + i);
-            items.remove(i);
+            items.remove(i);//remove index from list
 
-            // Update data size
+            //decrement data length
             --dataSize;
 
-            // Set flag to true to indicate removal
+            //indicate removal was successful
             removed = true;
-
-            // Break the loop after removing the first matching entry
             break;
         }
     }
-
     return removed;
     
 }
@@ -78,23 +75,26 @@ void Database<T>::clear() {
 
 template <typename T>
 T Database<T>::getValue(std::string key) {
+    //traverse both keys
    for (int i = 0; i < dataSize; ++i) {
+        //if parameter key is found in either key use member functino to return the entry
         if (KEY1[i] == key || KEY2[i] == key) {
-            // Found a match, return the item associated with the entry
             return items.getEntry(i);
         }
     }
-    // If no matching entry was found, return a default-constructed item
+   //no matches found will return a default empty value
     return T();
 }
 
 template <typename T>
 bool Database<T>::contains(std::string key) {
+    //search through both keys
       for (int i = 0; i < dataSize; ++i) {
+        //will return if either key holds the parameter key value
         if (KEY1[i] == key || KEY2[i] == key) {
-            return true; // Found a match, key exists in the database
+            return true; 
         }
     }
-    // Key not found in any entry
+    //will return false otherwise
     return false;
 }

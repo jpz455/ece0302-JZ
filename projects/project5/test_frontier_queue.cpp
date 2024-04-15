@@ -132,7 +132,7 @@ TEST_CASE("Pushing on empty queue", "[frontier_queue]") {
     REQUIRE(fq.contains(30));
 }
 
-TEST_CASE("testing push method with multiple pushes", "[frontier_queue]") {
+TEST_CASE("testing push method with multiple pushes and contain method", "[frontier_queue]") {
     frontier_queue<int> fq;
     REQUIRE(fq.empty());
 

@@ -142,9 +142,6 @@ TEST_CASE("Test Entry Types", "[entry type]") {
 
     testdb.add(isbn2, catalog_id2, e2);
 
-    // TODO
+    
     
 }
-
-
-

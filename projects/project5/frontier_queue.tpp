@@ -51,7 +51,7 @@ State<T> frontier_queue<T>::pop() {
 template <typename T>
 void frontier_queue<T>::push(const T &p, std::size_t cost, std::size_t heur) {
 
-  State<T> temp(p,cost, heur); //push a state with value p, cost and heur
+  State<T> temp(p,cost, heur); //creating a state to push
 
   //if queue is empty just add new item to it
   if(empty()){
@@ -83,7 +83,7 @@ template <typename T>
 bool frontier_queue<T>::contains(const T &p) {
 
   for(int i=0; i < queue.size(); i++){
-    if(queue[i].getValue() == p) 
+    if(queue[i].getValue() == p) //match occurs 
     return true;
   }
 

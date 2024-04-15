@@ -141,7 +141,116 @@ TEST_CASE("Test Entry Types", "[entry type]") {
     e2.pubYear = 2032;
 
     testdb.add(isbn2, catalog_id2, e2);
+}
+//****************************added tests*********************
 
-    
-    
+
+struct Entry2 {
+    std::string employeeName;
+    std::string employeeTitle;
+    int numHoursWorked;
+    bool operator==(const Entry2&) const; 
+};
+bool Entry2::operator==(const Entry2& e) const {
+    return (employeeName == e.employeeName) && (employeeTitle == e.employeeTitle) && (numHoursWorked == e.numHoursWorked);
+};
+
+TEST_CASE("Test default construction","[default construction Entry2]"){
+    Database<Entry2> testdb;
+    REQUIRE(testdb.getNumberOfEntries()==0);
+    REQUIRE(testdb.isEmpty());
+
+
+}
+
+TEST_CASE("Adding to employee information while checking for duplicates", "[add Entry2]") {
+    Database<Entry2> employeeInfo;
+
+    Entry2 carol;
+    Entry2 bob;
+    Entry2 jim;
+
+    carol.employeeName = "Carol";
+    carol.employeeTitle = "Manager";
+    carol.numHoursWorked = 40;
+
+    bob.employeeName = "Bob";
+    bob.employeeTitle = "Cashier";
+    bob.numHoursWorked = 37;
+
+    jim.employeeName = "Jim";
+    jim.employeeTitle = "Delivery Driver";
+    jim.numHoursWorked = 10;
+
+    REQUIRE(employeeInfo.add("Carol", "Manager", carol));
+    REQUIRE(employeeInfo.add("Bob", "Cashier", bob));
+    REQUIRE(employeeInfo.add("Jim", "Delivery Driver", jim));
+
+    REQUIRE(!employeeInfo.add("Carol", "Manager", carol)); // check for dups
+    REQUIRE(!employeeInfo.add("Bob", "Cashier", bob));    
+    REQUIRE(!employeeInfo.add("Jim", "Delivery Driver", jim)); 
+
+    REQUIRE(employeeInfo.getNumberOfEntries() == 3);
+}
+
+TEST_CASE("Employee information: getting employee information", "[retrieve Entry2]") {
+    Database<Entry2> employeeInfo;
+
+    Entry2 carol;
+    Entry2 bob;
+    Entry2 jim;
+
+    carol.employeeName = "Carol";
+    carol.employeeTitle = "Manager";
+    carol.numHoursWorked = 40;
+
+    bob.employeeName = "Bob";
+    bob.employeeTitle = "Cashier";
+    bob.numHoursWorked = 37;
+
+    jim.employeeName = "Jim";
+    jim.employeeTitle = "Delivery Driver";
+    jim.numHoursWorked = 10;
+
+    employeeInfo.add("Carol", "Manager", carol);
+    employeeInfo.add("Bob", "Cashier", bob);
+    employeeInfo.add("Jim", "Delivery Driver", jim);
+
+    REQUIRE(employeeInfo.getValue("Carol") == carol);
+    REQUIRE(employeeInfo.getValue("Bob") == bob);
+    REQUIRE(employeeInfo.getValue("Jim") == jim);
+}
+
+TEST_CASE("Removing employee information", "[remove Entry2]") {
+    Database<Entry2> employeeInfo;
+
+    Entry2 carol;
+    Entry2 bob;
+    Entry2 jim;
+
+    carol.employeeName = "Carol";
+    carol.employeeTitle = "Manager";
+    carol.numHoursWorked = 40;
+
+    bob.employeeName = "Bob";
+    bob.employeeTitle = "Cashier";
+    bob.numHoursWorked = 37;
+
+    jim.employeeName = "Jim";
+    jim.employeeTitle = "Delivery Driver";
+    jim.numHoursWorked = 10;
+
+    employeeInfo.add("Carol", "Manager", carol);
+    employeeInfo.add("Bob", "Cashier", bob);
+    employeeInfo.add("Jim", "Delivery Driver", jim);
+
+    REQUIRE(employeeInfo.remove("Bob"));
+    REQUIRE(!employeeInfo.contains("Bob"));
+
+    REQUIRE(employeeInfo.remove("Jim"));
+    REQUIRE(!employeeInfo.contains("Jim"));
+
+    REQUIRE(employeeInfo.remove("Carol"));
+    REQUIRE(!employeeInfo.contains("Carol"));
+    REQUIRE(employeeInfo.isEmpty());
 }

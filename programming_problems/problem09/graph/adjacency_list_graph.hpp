@@ -1,5 +1,8 @@
 #ifndef _ADJACENCY_LIST_GRAPH_H_
 #define _ADJACENCY_LIST_GRAPH_H_
+#include <vector>
+#include <map>
+#include <set>
 
 #include "abstract_graph.hpp"
 
@@ -21,6 +24,11 @@ class AdjacencyListGraph: public AbstractGraph<LabelType>
         void depthFirstTraversal(LabelType start, void visit(LabelType&));
 
         void breadthFirstTraversal(LabelType start, void visit(LabelType&));
+    private:
+
+    std::map<LabelType, std::set<LabelType>> nodes;
+    int edges;
+    std::set<LabelType> nodes2;
   
 };
 

@@ -8,3 +8,4 @@ TEST_CASE("Test Construction", "[construction]") {
   AdjacencyMatrixGraph<int>  matrixGraph;
   REQUIRE(matrixGraph.getNumVertices() == 0);
 }
+

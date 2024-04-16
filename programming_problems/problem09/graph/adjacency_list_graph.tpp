@@ -2,11 +2,11 @@
 
 
 template <typename LabelType>
-AdjacencyListGraph<LabelType>::AdjacencyListGraph():edges(0) {}
+AdjacencyListGraph<LabelType>::AdjacencyListGraph(): edges(0){}
 
 template <typename LabelType> 
 int AdjacencyListGraph<LabelType>::getNumVertices() const {
-    return nodes.size();
+    return verts.size();
 }
 
 template <typename LabelType> 
@@ -17,36 +17,46 @@ int AdjacencyListGraph<LabelType>::getNumEdges() const {
 template <typename LabelType> 
 bool AdjacencyListGraph<LabelType>::add(LabelType start, LabelType end) {
   
-    if (start == end) {
+    //checking that the verticies are connected otherwise you cannot add here
+     if (verts.size() != 0 && verts.find(start) == verts.end() && verts.find(end) == verts.end()) {
         return false; 
     }
-    if (nodes[start].count(end) || nodes[end].count(start)) {
+    
+    //checking for duplicates
+    if (verts[start].count(end) || verts[end].count(start)) {
         return false; 
     }
-    nodes[start].insert(end);
-    nodes[end].insert(start); 
+
+    //otherwise insert at specified values
+    verts[start].insert(end);
+    verts[end].insert(start); 
+    //increment the number of edges
     edges ++;
-    return true;
+    return true;//sucess!
 }   
 
 template <typename LabelType> 
 bool AdjacencyListGraph<LabelType>::remove(LabelType start, LabelType end) {
-    if (!nodes.count(start) || !nodes.count(end) ||
-        !nodes[start].count(end) || !nodes[end].count(start)) {
+    
+    //check verticie and edges exist
+    if (!verts.count(start) || !verts.count(end) || !verts[start].count(end) || !verts[end].count(start)) {
         return false; 
     }
-    nodes[start].erase(end);
-    nodes[end].erase(start); 
 
+    //erase verticies from adjacency lists that essentially removes edges
+    verts[start].erase(end);
+    verts[end].erase(start); 
+    //decrement edge count
     edges --;
 
-    if (nodes[start].empty()) {
-        nodes.erase(start);
+    //checking for isolated verticies
+    if (verts[start].empty()) {
+        verts.erase(start);//erase from overall graph if so
     }
-    if (nodes[end].empty()) {
-        nodes.erase(end);
+    if (verts[end].empty()) {
+        verts.erase(end);
     }
-    return true; 
+    return true; //success!
 }
 
 template <typename LabelType> 

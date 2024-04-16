@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 
+
 #include "abstract_graph.hpp"
 
 template <typename LabelType>
@@ -26,9 +27,10 @@ class AdjacencyListGraph: public AbstractGraph<LabelType>
         void breadthFirstTraversal(LabelType start, void visit(LabelType&));
     private:
 
-    std::map<LabelType, std::set<LabelType>> nodes;
+    std::map<LabelType, std::set<LabelType>> verts;
     int edges;
     std::set<LabelType> nodes2;
+
   
 };
 

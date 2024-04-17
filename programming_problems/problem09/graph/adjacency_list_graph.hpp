@@ -29,7 +29,7 @@ class AdjacencyListGraph: public AbstractGraph<LabelType>
 
     std::map<LabelType, std::set<LabelType>> verts;
     int edges;
-    std::set<LabelType> nodes2;
+    
 
   
 };

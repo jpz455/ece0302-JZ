@@ -26,9 +26,7 @@ class AdjacencyMatrixGraph: public AbstractGraph<LabelType>
         void breadthFirstTraversal(LabelType start, void visit(LabelType&));
     
     private:
-    int numEdges;
-    std::map<LabelType, std::string> adjMatrix;
-    std::vector<LabelType> nodes; 
+     
 };
 
 #include "adjacency_matrix_graph.tpp"

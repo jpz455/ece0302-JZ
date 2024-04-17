@@ -16,8 +16,8 @@ State<T> frontier_queue<T>::pop() {
     return popThis;
   }
   
-  //otherwise store element that will be popped
-    State<T> popThis = queue[0];
+  //otherwise store root
+    State<T> swapVal = queue[0];
 
     //overwrite root element with last element of the queue
     queue[0] = queue.back();
@@ -45,7 +45,7 @@ State<T> frontier_queue<T>::pop() {
             break; //will break once heapify format is reached
         }
     }
-    return popThis; 
+    return swapVal; 
 }
 
 template <typename T>

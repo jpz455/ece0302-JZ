@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm> 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 template <typename LabelType>
 class AdjacencyMatrixGraph: public AbstractGraph<LabelType>
@@ -27,11 +27,14 @@ class AdjacencyMatrixGraph: public AbstractGraph<LabelType>
         void breadthFirstTraversal(LabelType start, void visit(LabelType&));
     
     private:
-    std::map<LabelType, int> vertexIndices;
-    std::vector<std::vector<bool>> adjacencyMatrix;
-     
+   int edges; 
+   std::vector<LabelType> verts;
+   std::vector<std::vector<bool> > matrix;
+   
+          
 };
 
 #include "adjacency_matrix_graph.tpp"
+
 
 #endif 

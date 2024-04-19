@@ -287,3 +287,4 @@ TEST_CASE("Test Copy Assignment","[sorted linked list]"){
         REQUIRE(lst1.getEntry(i) == lst2.getEntry(i));
     }
 }
+

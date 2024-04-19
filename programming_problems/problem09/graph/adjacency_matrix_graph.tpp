@@ -1,134 +1,126 @@
 #include "adjacency_matrix_graph.hpp"
 
 template <typename LabelType>
-AdjacencyMatrixGraph<LabelType>::AdjacencyMatrixGraph() {}
+AdjacencyMatrixGraph<LabelType>::AdjacencyMatrixGraph():edges(0) {}
 
 template <typename LabelType> 
 int AdjacencyMatrixGraph<LabelType>::getNumVertices() const {
-    return vertexIndices.size();
+   return verts.size();
 }
 
 template <typename LabelType> 
 int AdjacencyMatrixGraph<LabelType>::getNumEdges() const {
-   int count = 0;
-    for (int i = 0; i < adjacencyMatrix.size(); ++i) {
-        for (int j = i + 1; j < adjacencyMatrix.size(); ++j) {
-            if (adjacencyMatrix[i][j]) {
-                count++;
-            }
-        }
-    }
-    return count;
+  return edges;
 }
         
 template <typename LabelType> 
 bool AdjacencyMatrixGraph<LabelType>::add(LabelType start, LabelType end) {
     
+    //checking that start exists, check that there are verticies in the graph, and check that end exists
+    if ((std::find(verts.begin(), verts.end(), start) == verts.end()) && (!verts.empty()) && (std::find(verts.begin(), verts.end(), end) == verts.end())) {
+    return false;
+    }
+
+    //adding start if it doesnt already exist
+   if (std::find(verts.begin(), verts.end(), start) == verts.end()) {
+        verts.push_back(start);
+        matrix.push_back(std::vector<bool>(verts.size(), 0));
+        for (int i = 0; i < matrix.size(); i++) {
+            matrix[i].push_back(0);
+        }
+    }
+
+    //adding end if it doesnt already exist
+   if (std::find(verts.begin(), verts.end(), end) == verts.end()) {
+        verts.push_back(end);
+        matrix.push_back(std::vector<bool>(verts.size(), 0));
+        for (int i = 0; i < matrix.size(); i++) {
+            matrix[i].push_back(0);
+        }
+    }
+
+
+    //find start and end indexes
+   int startI = std::find(verts.begin(), verts.end(), start) - verts.begin();
+   int endI = std::find(verts.begin(), verts.end(), end) - verts.begin();
+
+    //checking that the start and end indexes are found within verts
+   if (startI == verts.size() || endI == verts.size()) {
+      return false; 
+    }
+
+   //checking for duplicate edges
+   if (matrix[startI][endI] || matrix[endI][startI]) {
+      return false; 
+   }
+   //once all conditions are passed add the edge to the matrix
+   matrix[startI][endI] = matrix[endI][startI] = true;
+   //increment number of edges
+   edges++;
    
-    // Check if vertices already exist
-    bool isNewStart = vertexIndices.find(start) == vertexIndices.end();
-    bool isNewEnd = vertexIndices.find(end) == vertexIndices.end();
-    
-    if (isNewStart) {
-        vertexIndices[start] = vertexIndices.size();
-    }
-    if (isNewEnd) {
-        vertexIndices[end] = vertexIndices.size();
-    }
-    
-    int startIndex = vertexIndices[start];
-    int endIndex = vertexIndices[end];
-    
-    // Ensure matrix is large enough to accommodate both vertices
-    int maxIndex = std::max(startIndex, endIndex) + 1;
-    if (maxIndex > adjacencyMatrix.size()) {
-        adjacencyMatrix.resize(maxIndex, std::vector<bool>(maxIndex, false));
-    }
-    
-    // Check if edge already exists
-    if (adjacencyMatrix[startIndex][endIndex]) {
-        return false; // Edge already exists
-    }
-    
-    // Add edge
-    adjacencyMatrix[startIndex][endIndex] = true;
-    adjacencyMatrix[endIndex][startIndex] = true;
-    
-    // Update the number of vertices if new vertices were added
-    if (isNewStart || isNewEnd) {
-        return true;
-    }
-    
-    return false; // Edge added but no new vertices
-    
-     
-       
+   return true;
 }   
 
 template <typename LabelType> 
 bool AdjacencyMatrixGraph<LabelType>::remove(LabelType start, LabelType end) {
    
-   
-   if (vertexIndices.find(start) == vertexIndices.end() || vertexIndices.find(end) == vertexIndices.end()) {
-        return false; // Vertices don't exist
+    if (!std::count(verts.begin(), verts.end(), start) || !std::count(verts.begin(), verts.end(), end)) {
+        return false;
     }
-    
-    int startIndex = vertexIndices[start];
-    int endIndex = vertexIndices[end];
-    
-    if (!adjacencyMatrix[startIndex][endIndex]) {
-        return false; // Edge doesn't exist
-    }
-    
-    // Remove edge
-    adjacencyMatrix[startIndex][endIndex] = false;
-    adjacencyMatrix[endIndex][startIndex] = false;
-    
-    // Update number of edges
-    int numEdges = 0;
-    for (const auto& row : adjacencyMatrix) {
-        for (bool edge : row) {
-            if (edge) {
-                numEdges++;
-            }
+    int startIdx, endIdx;
+    for (int i = 0; i < verts.size(); i++) {
+        if (verts[i] == start) {
+            startIdx = i;
+        }
+        if (verts[i] == end) {
+            endIdx = i;
         }
     }
-    
-    // Remove isolated vertices
-    bool removedVertices = false;
-    for (auto it = vertexIndices.begin(); it != vertexIndices.end();) {
-        LabelType vertex = it->first;
-        int index = it->second;
-        
-        bool hasEdges = false;
-        for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
-            if (adjacencyMatrix[index][i]) {
-                hasEdges = true;
-                break;
-            }
-        }
-        
-        if (!hasEdges) {
-            it = vertexIndices.erase(it);
-            removedVertices = true;
-        } else {
-            ++it;
-        }
+    if (!matrix[startIdx][endIdx] || !matrix[endIdx][startIdx]) {
+        return false;
     }
-    
-    if (removedVertices) {
-        // Re-index the vertices
-        int newIndex = 0;
-        std::map<LabelType, int> newVertexIndices;
-        for (const auto& entry : vertexIndices) {
-            newVertexIndices[entry.first] = newIndex++;
-        }
-        vertexIndices = std::move(newVertexIndices);
-    }
-    
-    return true;
-}
+    matrix[startIdx][endIdx] = 0;
+    matrix[endIdx][startIdx] = 0;
+    edges--;
 
+   
+    bool empty = true;
+    for (int i = 0; i < matrix[startIdx].size(); i++) {
+        if (matrix[startIdx][i]) {
+            empty = false;
+            break;
+        }
+    }
+    if (empty) {
+        for (int i = 0; i < matrix.size(); i++) {
+            matrix[i].erase(matrix[i].begin() + startIdx);
+        }
+        matrix.erase(matrix.begin() + startIdx);
+        verts.erase(std::find(verts.begin(), verts.end(), start));
+       
+        if (endIdx > startIdx) {
+            endIdx--;
+        }
+    }
+
+
+    empty = true;
+    for (int i = 0; i < matrix[endIdx].size(); i++) {
+        if (matrix[endIdx][i]) {
+            empty = false;
+            break;
+        }
+    }
+    if (empty) {
+        for (int i = 0; i < matrix.size(); i++) {
+            matrix[i].erase(matrix[i].begin() + endIdx);
+        }
+        matrix.erase(matrix.begin() + endIdx);
+        verts.erase(std::find(verts.begin(), verts.end(), end));
+    }
+
+    return true;
+    }
 template <typename LabelType> 
 void AdjacencyMatrixGraph<LabelType>::depthFirstTraversal(LabelType start, void visit(LabelType&)) {}
 

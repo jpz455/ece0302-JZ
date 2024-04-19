@@ -67,3 +67,33 @@ TEST_CASE("Testing Priority Queue Peek", "[priority queue]") {
   
     
 }
+
+TEST_CASE("Final review","[final review]"){
+  typedef SortedList<int,List<int>> SortedListType;
+  typedef PriorityQueue<int,SortedListType> PriorityQueueType;
+
+  PriorityQueueType pq;
+
+  pq.add(700);
+  pq.add(450);
+  pq.add(100);
+  pq.add(23);
+
+  REQUIRE(pq.peek() == 700);
+
+  pq.remove();
+
+  REQUIRE(pq.peek() == 450);
+
+  pq.add(15);
+
+  REQUIRE(pq.peek() == 450);
+
+  pq.add(80);
+
+  REQUIRE(pq.peek() == 450);
+
+  pq.add(1600);
+
+  REQUIRE(pq.peek() == 1600);
+}
